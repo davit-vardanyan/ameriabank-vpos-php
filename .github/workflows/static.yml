@@ -1,0 +1,35 @@
+name: Static analysis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, dom, json, mbstring
+          coverage: none
+
+      - uses: ramsey/composer-install@v3
+
+      - run: composer validate --strict
+
+      - run: composer normalize --dry-run
+
+      - run: composer stan
+
+      - run: composer cs:check
+
+      - run: composer rector

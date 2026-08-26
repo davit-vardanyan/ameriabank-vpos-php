@@ -1,0 +1,2801 @@
+{
+    "source": "https://servicestest.ameriabank.am/VPOS/Help",
+    "endpoints": [
+        {
+            "operation": "InitPayment",
+            "label": "POST api/VPOS/InitPayment",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-InitPayment",
+            "title": "POST api/VPOS/InitPayment",
+            "description": "Make Payment",
+            "request": {
+                "model": "InitPaymentRequest",
+                "fields": [
+                    {
+                        "Name": "ClientID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Amount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "OrderID",
+                        "Description": "",
+                        "Type": "integer",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "BackURL",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Description",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Currency",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardHolderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Opaque",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Timeout",
+                        "Description": "",
+                        "Type": "integer",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentServiceType",
+                        "Description": "",
+                        "Type": "integer",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ClientID\": \"sample string 1\", \"Amount\": 2.0, \"OrderID\": 3, \"BackURL\": \"sample string 4\", \"Username\": \"sample string 5\", \"Password\": \"sample string 6\", \"Description\": \"sample string 7\", \"Currency\": \"sample string 8\", \"CardHolderID\": \"sample string 9\", \"Opaque\": \"sample string 10\", \"Timeout\": 11, \"PaymentServiceType\": 1 }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<InitPaymentRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ClientID>sample string 1</ClientID> <Amount>2</Amount> <OrderID>3</OrderID> <BackURL>sample string 4</BackURL> <Username>sample string 5</Username> <Password>sample string 6</Password> <Description>sample string 7</Description> <Currency>sample string 8</Currency> <CardHolderID>sample string 9</CardHolderID> <Opaque>sample string 10</Opaque> <Timeout>11</Timeout> <PaymentServiceType>1</PaymentServiceType> </InitPaymentRequest>"
+                    }
+                ],
+                "referenced_models": []
+            },
+            "response": {
+                "model": "InitPaymentResponse",
+                "fields": [
+                    {
+                        "Name": "PaymentID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "integer",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"PaymentID\": \"sample string 1\", \"ResponseCode\": 2, \"ResponseMessage\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<InitPaymentResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <PaymentID>sample string 1</PaymentID> <ResponseCode>2</ResponseCode> <ResponseMessage>sample string 3</ResponseMessage> </InitPaymentResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        },
+        {
+            "operation": "GetPaymentId",
+            "label": "POST api/VPOS/GetPaymentId",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-GetPaymentId",
+            "title": "POST api/VPOS/GetPaymentId",
+            "description": "Get Payment Id",
+            "request": {
+                "model": "GetPaymentIdRequest",
+                "fields": [
+                    {
+                        "Name": "ClientID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "OrderID",
+                        "Description": "",
+                        "Type": "integer",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ClientID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"OrderID\": 4 }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<GetPaymentIdRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ClientID>sample string 1</ClientID> <Username>sample string 2</Username> <Password>sample string 3</Password> <OrderID>4</OrderID> </GetPaymentIdRequest>"
+                    }
+                ],
+                "referenced_models": []
+            },
+            "response": {
+                "model": "GetPaymentIdResponse",
+                "fields": [
+                    {
+                        "Name": "PaymentId",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"PaymentId\": \"sample string 1\", \"ResponseMessage\": \"sample string 2\", \"ResponseCode\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<GetPaymentIdResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <PaymentId>sample string 1</PaymentId> <ResponseMessage>sample string 2</ResponseMessage> <ResponseCode>sample string 3</ResponseCode> </GetPaymentIdResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        },
+        {
+            "operation": "GetPendingTransactions",
+            "label": "POST api/VPOS/GetPendingTransactions",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-GetPendingTransactions",
+            "title": "POST api/VPOS/GetPendingTransactions",
+            "description": "Get Pending Transactions",
+            "request": {
+                "model": "GetPendingTransactionsRequest",
+                "fields": [
+                    {
+                        "Name": "ClientID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "StartDate",
+                        "Description": "",
+                        "Type": "date",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "EndDate",
+                        "Description": "",
+                        "Type": "date",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ClientID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"StartDate\": \"2026-08-23T19:46:22.3011509+04:00\", \"EndDate\": \"2026-08-23T19:46:22.3011509+04:00\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<GetPendingTransactionsRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ClientID>sample string 1</ClientID> <Username>sample string 2</Username> <Password>sample string 3</Password> <StartDate>2026-08-23T19:46:22.3011509+04:00</StartDate> <EndDate>2026-08-23T19:46:22.3011509+04:00</EndDate> </GetPendingTransactionsRequest>"
+                    }
+                ],
+                "referenced_models": []
+            },
+            "response": {
+                "model": "GetPendingTransactionsResponse",
+                "fields": [
+                    {
+                        "Name": "OrderId",
+                        "Description": "",
+                        "Type": "integer",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ClientName",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardNumber",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Amount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentDate",
+                        "Description": "",
+                        "Type": "date",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ErrorMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "[ { \"OrderId\": 1, \"ClientName\": \"sample string 2\", \"CardNumber\": \"sample string 3\", \"Amount\": 4.0, \"PaymentDate\": \"2026-08-23T19:46:22.3323991+04:00\", \"ErrorMessage\": \"sample string 6\" }, { \"OrderId\": 1, \"ClientName\": \"sample string 2\", \"CardNumber\": \"sample string 3\", \"Amount\": 4.0, \"PaymentDate\": \"2026-08-23T19:46:22.3323991+04:00\", \"ErrorMessage\": \"sample string 6\" } ]"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<ArrayOfGetPendingTransactionsResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <GetPendingTransactionsResponse> <OrderId>1</OrderId> <ClientName>sample string 2</ClientName> <CardNumber>sample string 3</CardNumber> <Amount>4</Amount> <PaymentDate>2026-08-23T19:46:22.3323991+04:00</PaymentDate> <ErrorMessage>sample string 6</ErrorMessage> </GetPendingTransactionsResponse> <GetPendingTransactionsResponse> <OrderId>1</OrderId> <ClientName>sample string 2</ClientName> <CardNumber>sample string 3</CardNumber> <Amount>4</Amount> <PaymentDate>2026-08-23T19:46:22.3323991+04:00</PaymentDate> <ErrorMessage>sample string 6</ErrorMessage> </GetPendingTransactionsResponse> </ArrayOfGetPendingTransactionsResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        },
+        {
+            "operation": "ConfirmPayment",
+            "label": "POST api/VPOS/ConfirmPayment",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-ConfirmPayment",
+            "title": "POST api/VPOS/ConfirmPayment",
+            "description": "Confirm Payment",
+            "request": {
+                "model": "ConfirmPaymentRequest",
+                "fields": [
+                    {
+                        "Name": "PaymentID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Amount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"PaymentID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"Amount\": 4.0 }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<ConfirmPaymentRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <PaymentID>sample string 1</PaymentID> <Username>sample string 2</Username> <Password>sample string 3</Password> <Amount>4</Amount> </ConfirmPaymentRequest>"
+                    }
+                ],
+                "referenced_models": []
+            },
+            "response": {
+                "model": "ConfirmPaymentResponse",
+                "fields": [
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Opaque",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ResponseCode\": \"sample string 1\", \"ResponseMessage\": \"sample string 2\", \"Opaque\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<ConfirmPaymentResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ResponseCode>sample string 1</ResponseCode> <ResponseMessage>sample string 2</ResponseMessage> <Opaque>sample string 3</Opaque> </ConfirmPaymentResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        },
+        {
+            "operation": "GetPaymentDetails",
+            "label": "POST api/VPOS/GetPaymentDetails",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-GetPaymentDetails",
+            "title": "POST api/VPOS/GetPaymentDetails",
+            "description": "Get Order Status",
+            "request": {
+                "model": "PaymentDetailsRequest",
+                "fields": [
+                    {
+                        "Name": "PaymentID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"PaymentID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<PaymentDetailsRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <PaymentID>sample string 1</PaymentID> <Username>sample string 2</Username> <Password>sample string 3</Password> </PaymentDetailsRequest>"
+                    }
+                ],
+                "referenced_models": []
+            },
+            "response": {
+                "model": "PaymentDetailsResponse",
+                "fields": [
+                    {
+                        "Name": "Amount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ApprovedAmount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ApprovalCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardNumber",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ClientName",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ClientEmail",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Currency",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "DateTime",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "DepositedAmount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Description",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "MDOrderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "MerchantId",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "TerminalId",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "OrderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentState",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentType",
+                        "Description": "",
+                        "Type": "PaymentsEnum",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PrimaryRC",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ExpDate",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ProcessingIP",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "OrderStatus",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardHolderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "BindingID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "RefundedAmount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Opaque",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "TrxnDescription",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "rrn",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ActionCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ExchangeRate",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "BankInfo",
+                        "Description": "",
+                        "Type": "BankInfo",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"Amount\": 1.0, \"ApprovedAmount\": 2.0, \"ApprovalCode\": \"sample string 3\", \"CardNumber\": \"sample string 4\", \"ClientName\": \"sample string 5\", \"ClientEmail\": \"sample string 6\", \"Currency\": \"sample string 7\", \"DateTime\": \"sample string 8\", \"DepositedAmount\": 9.0, \"Description\": \"sample string 10\", \"MDOrderID\": \"sample string 11\", \"MerchantId\": \"sample string 12\", \"TerminalId\": \"sample string 13\", \"OrderID\": \"sample string 14\", \"PaymentState\": \"sample string 15\", \"PaymentType\": 0, \"PrimaryRC\": \"sample string 16\", \"ResponseCode\": \"sample string 17\", \"ExpDate\": \"sample string 18\", \"ProcessingIP\": \"sample string 19\", \"OrderStatus\": \"sample string 20\", \"CardHolderID\": \"sample string 21\", \"BindingID\": \"sample string 22\", \"RefundedAmount\": 23.0, \"Opaque\": \"sample string 24\", \"TrxnDescription\": \"sample string 25\", \"rrn\": \"sample string 26\", \"ActionCode\": \"sample string 27\", \"ExchangeRate\": 28.0, \"BankInfo\": { \"BankName\": \"sample string 1\", \"BankCountryCode\": \"sample string 2\", \"BankCountryName\": \"sample string 3\" } }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<PaymentDetailsResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <Amount>1</Amount> <ApprovedAmount>2</ApprovedAmount> <ApprovalCode>sample string 3</ApprovalCode> <CardNumber>sample string 4</CardNumber> <ClientName>sample string 5</ClientName> <ClientEmail>sample string 6</ClientEmail> <Currency>sample string 7</Currency> <DateTime>sample string 8</DateTime> <DepositedAmount>9</DepositedAmount> <Description>sample string 10</Description> <MDOrderID>sample string 11</MDOrderID> <MerchantId>sample string 12</MerchantId> <TerminalId>sample string 13</TerminalId> <OrderID>sample string 14</OrderID> <PaymentState>sample string 15</PaymentState> <PaymentType>None</PaymentType> <PrimaryRC>sample string 16</PrimaryRC> <ResponseCode>sample string 17</ResponseCode> <ExpDate>sample string 18</ExpDate> <ProcessingIP>sample string 19</ProcessingIP> <OrderStatus>sample string 20</OrderStatus> <CardHolderID>sample string 21</CardHolderID> <BindingID>sample string 22</BindingID> <RefundedAmount>23</RefundedAmount> <Opaque>sample string 24</Opaque> <TrxnDescription>sample string 25</TrxnDescription> <rrn>sample string 26</rrn> <ActionCode>sample string 27</ActionCode> <ExchangeRate>28</ExchangeRate> <BankInfo> <BankName>sample string 1</BankName> <BankCountryCode>sample string 2</BankCountryCode> <BankCountryName>sample string 3</BankCountryName> </BankInfo> </PaymentDetailsResponse>"
+                    }
+                ],
+                "referenced_models": [
+                    "BankInfo",
+                    "PaymentsEnum"
+                ]
+            }
+        },
+        {
+            "operation": "RefundPayment",
+            "label": "POST api/VPOS/RefundPayment",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-RefundPayment",
+            "title": "POST api/VPOS/RefundPayment",
+            "description": "Refund Payment",
+            "request": {
+                "model": "RefundPaymentRequest",
+                "fields": [
+                    {
+                        "Name": "PaymentID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Amount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"PaymentID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"Amount\": 4.0 }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<RefundPaymentRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <PaymentID>sample string 1</PaymentID> <Username>sample string 2</Username> <Password>sample string 3</Password> <Amount>4</Amount> </RefundPaymentRequest>"
+                    }
+                ],
+                "referenced_models": []
+            },
+            "response": {
+                "model": "RefundPaymentResponse",
+                "fields": [
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Opaque",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ResponseCode\": \"sample string 1\", \"ResponseMessage\": \"sample string 2\", \"Opaque\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<RefundPaymentResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ResponseCode>sample string 1</ResponseCode> <ResponseMessage>sample string 2</ResponseMessage> <Opaque>sample string 3</Opaque> </RefundPaymentResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        },
+        {
+            "operation": "CancelPayment",
+            "label": "POST api/VPOS/CancelPayment",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-CancelPayment",
+            "title": "POST api/VPOS/CancelPayment",
+            "description": "Reverse Payment",
+            "request": {
+                "model": "CancelPaymentRequest",
+                "fields": [
+                    {
+                        "Name": "PaymentID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"PaymentID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<CancelPaymentRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <PaymentID>sample string 1</PaymentID> <Username>sample string 2</Username> <Password>sample string 3</Password> </CancelPaymentRequest>"
+                    }
+                ],
+                "referenced_models": []
+            },
+            "response": {
+                "model": "CancelPaymentResponse",
+                "fields": [
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Opaque",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ResponseCode\": \"sample string 1\", \"ResponseMessage\": \"sample string 2\", \"Opaque\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<CancelPaymentResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ResponseCode>sample string 1</ResponseCode> <ResponseMessage>sample string 2</ResponseMessage> <Opaque>sample string 3</Opaque> </CancelPaymentResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        },
+        {
+            "operation": "GetBindings",
+            "label": "POST api/VPOS/GetBindings",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-GetBindings",
+            "title": "POST api/VPOS/GetBindings",
+            "description": "Get Bindings",
+            "request": {
+                "model": "GetBindingsRequest",
+                "fields": [
+                    {
+                        "Name": "ClientID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentType",
+                        "Description": "",
+                        "Type": "PaymentsEnum",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ClientID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"PaymentType\": 0 }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<GetBindingsRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ClientID>sample string 1</ClientID> <Username>sample string 2</Username> <Password>sample string 3</Password> <PaymentType>None</PaymentType> </GetBindingsRequest>"
+                    }
+                ],
+                "referenced_models": [
+                    "PaymentsEnum"
+                ]
+            },
+            "response": {
+                "model": "GetBindingsResponse",
+                "fields": [
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardBindingFileds",
+                        "Description": "",
+                        "Type": "Collection of CardBindingFiled",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ResponseCode\": \"sample string 1\", \"ResponseMessage\": \"sample string 2\", \"CardBindingFileds\": [ { \"CardHolderID\": \"sample string 1\", \"CardPan\": \"sample string 2\", \"ExpDate\": \"sample string 3\", \"IsAvtive\": true }, { \"CardHolderID\": \"sample string 1\", \"CardPan\": \"sample string 2\", \"ExpDate\": \"sample string 3\", \"IsAvtive\": true } ] }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<GetBindingsResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ResponseCode>sample string 1</ResponseCode> <ResponseMessage>sample string 2</ResponseMessage> <CardBindingFileds> <CardBindingFiled> <CardHolderID>sample string 1</CardHolderID> <CardPan>sample string 2</CardPan> <ExpDate>sample string 3</ExpDate> <IsAvtive>true</IsAvtive> </CardBindingFiled> <CardBindingFiled> <CardHolderID>sample string 1</CardHolderID> <CardPan>sample string 2</CardPan> <ExpDate>sample string 3</ExpDate> <IsAvtive>true</IsAvtive> </CardBindingFiled> </CardBindingFileds> </GetBindingsResponse>"
+                    }
+                ],
+                "referenced_models": [
+                    "CardBindingFiled"
+                ]
+            }
+        },
+        {
+            "operation": "ActivateBinding",
+            "label": "POST api/VPOS/ActivateBinding",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-ActivateBinding",
+            "title": "POST api/VPOS/ActivateBinding",
+            "description": "Activate Binding",
+            "request": {
+                "model": "ActivateBindingRequest",
+                "fields": [
+                    {
+                        "Name": "ClientID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardHolderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentType",
+                        "Description": "",
+                        "Type": "PaymentsEnum",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ClientID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"CardHolderID\": \"sample string 4\", \"PaymentType\": 0 }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<ActivateBindingRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ClientID>sample string 1</ClientID> <Username>sample string 2</Username> <Password>sample string 3</Password> <CardHolderID>sample string 4</CardHolderID> <PaymentType>None</PaymentType> </ActivateBindingRequest>"
+                    }
+                ],
+                "referenced_models": [
+                    "PaymentsEnum"
+                ]
+            },
+            "response": {
+                "model": "ActivateBindingResponse",
+                "fields": [
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardHolderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ResponseCode\": \"sample string 1\", \"ResponseMessage\": \"sample string 2\", \"CardHolderID\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<ActivateBindingResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ResponseCode>sample string 1</ResponseCode> <ResponseMessage>sample string 2</ResponseMessage> <CardHolderID>sample string 3</CardHolderID> </ActivateBindingResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        },
+        {
+            "operation": "DeactivateBinding",
+            "label": "POST api/VPOS/DeactivateBinding",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-DeactivateBinding",
+            "title": "POST api/VPOS/DeactivateBinding",
+            "description": "Deactivate Binding",
+            "request": {
+                "model": "DeactivateBindingRequest",
+                "fields": [
+                    {
+                        "Name": "ClientID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardHolderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentType",
+                        "Description": "",
+                        "Type": "PaymentsEnum",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ClientID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"CardHolderID\": \"sample string 4\", \"PaymentType\": 0 }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<DeactivateBindingRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ClientID>sample string 1</ClientID> <Username>sample string 2</Username> <Password>sample string 3</Password> <CardHolderID>sample string 4</CardHolderID> <PaymentType>None</PaymentType> </DeactivateBindingRequest>"
+                    }
+                ],
+                "referenced_models": [
+                    "PaymentsEnum"
+                ]
+            },
+            "response": {
+                "model": "DeactivateBindingResponse",
+                "fields": [
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseMessage",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardHolderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ResponseCode\": \"sample string 1\", \"ResponseMessage\": \"sample string 2\", \"CardHolderID\": \"sample string 3\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<DeactivateBindingResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ResponseCode>sample string 1</ResponseCode> <ResponseMessage>sample string 2</ResponseMessage> <CardHolderID>sample string 3</CardHolderID> </DeactivateBindingResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        },
+        {
+            "operation": "MakeBindingPayment",
+            "label": "POST api/VPOS/MakeBindingPayment",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-MakeBindingPayment",
+            "title": "POST api/VPOS/MakeBindingPayment",
+            "description": "Do Binding Transaction",
+            "request": {
+                "model": "MakeBindingPaymentRequest",
+                "fields": [
+                    {
+                        "Name": "ClientID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardHolderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Amount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "OrderID",
+                        "Description": "",
+                        "Type": "integer",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "BackURL",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentType",
+                        "Description": "",
+                        "Type": "PaymentsEnum",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Description",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Currency",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Opaque",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ClientID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"CardHolderID\": \"sample string 4\", \"Amount\": 5.0, \"OrderID\": 6, \"BackURL\": \"sample string 7\", \"PaymentType\": 0, \"Description\": \"sample string 8\", \"Currency\": \"sample string 9\", \"Opaque\": \"sample string 10\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<MakeBindingPaymentRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ClientID>sample string 1</ClientID> <Username>sample string 2</Username> <Password>sample string 3</Password> <CardHolderID>sample string 4</CardHolderID> <Amount>5</Amount> <OrderID>6</OrderID> <BackURL>sample string 7</BackURL> <PaymentType>None</PaymentType> <Description>sample string 8</Description> <Currency>sample string 9</Currency> <Opaque>sample string 10</Opaque> </MakeBindingPaymentRequest>"
+                    }
+                ],
+                "referenced_models": [
+                    "PaymentsEnum"
+                ]
+            },
+            "response": {
+                "model": "MakeBindingPaymentResponse",
+                "fields": [
+                    {
+                        "Name": "PaymentID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ResponseCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Amount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ApprovedAmount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ApprovalCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardNumber",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ClientName",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Currency",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "DateTime",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "DepositedAmount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Description",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "MDOrderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "MerchantId",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "TerminalId",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "OrderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentState",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentType",
+                        "Description": "",
+                        "Type": "PaymentsEnum",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PrimaryRC",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ExpDate",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ProcessingIP",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "OrderStatus",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "CardHolderID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "BindingID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "RefundedAmount",
+                        "Description": "",
+                        "Type": "decimal number",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Opaque",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "TrxnDescription",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "rrn",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "ActionCode",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "AcsUrl",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaReq",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "TermUrl",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"PaymentID\": \"sample string 1\", \"ResponseCode\": \"sample string 2\", \"Amount\": 3.0, \"ApprovedAmount\": 4.0, \"ApprovalCode\": \"sample string 5\", \"CardNumber\": \"sample string 6\", \"ClientName\": \"sample string 7\", \"Currency\": \"sample string 8\", \"DateTime\": \"sample string 9\", \"DepositedAmount\": 10.0, \"Description\": \"sample string 11\", \"MDOrderID\": \"sample string 12\", \"MerchantId\": \"sample string 13\", \"TerminalId\": \"sample string 14\", \"OrderID\": \"sample string 15\", \"PaymentState\": \"sample string 16\", \"PaymentType\": 0, \"PrimaryRC\": \"sample string 17\", \"ExpDate\": \"sample string 18\", \"ProcessingIP\": \"sample string 19\", \"OrderStatus\": \"sample string 20\", \"CardHolderID\": \"sample string 21\", \"BindingID\": \"sample string 22\", \"RefundedAmount\": 23.0, \"Opaque\": \"sample string 24\", \"TrxnDescription\": \"sample string 25\", \"rrn\": \"sample string 26\", \"ActionCode\": \"sample string 27\", \"AcsUrl\": \"sample string 28\", \"PaReq\": \"sample string 29\", \"TermUrl\": \"sample string 30\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<MakeBindingPaymentResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <PaymentID>sample string 1</PaymentID> <ResponseCode>sample string 2</ResponseCode> <Amount>3</Amount> <ApprovedAmount>4</ApprovedAmount> <ApprovalCode>sample string 5</ApprovalCode> <CardNumber>sample string 6</CardNumber> <ClientName>sample string 7</ClientName> <Currency>sample string 8</Currency> <DateTime>sample string 9</DateTime> <DepositedAmount>10</DepositedAmount> <Description>sample string 11</Description> <MDOrderID>sample string 12</MDOrderID> <MerchantId>sample string 13</MerchantId> <TerminalId>sample string 14</TerminalId> <OrderID>sample string 15</OrderID> <PaymentState>sample string 16</PaymentState> <PaymentType>None</PaymentType> <PrimaryRC>sample string 17</PrimaryRC> <ExpDate>sample string 18</ExpDate> <ProcessingIP>sample string 19</ProcessingIP> <OrderStatus>sample string 20</OrderStatus> <CardHolderID>sample string 21</CardHolderID> <BindingID>sample string 22</BindingID> <RefundedAmount>23</RefundedAmount> <Opaque>sample string 24</Opaque> <TrxnDescription>sample string 25</TrxnDescription> <rrn>sample string 26</rrn> <ActionCode>sample string 27</ActionCode> <AcsUrl>sample string 28</AcsUrl> <PaReq>sample string 29</PaReq> <TermUrl>sample string 30</TermUrl> </MakeBindingPaymentResponse>"
+                    }
+                ],
+                "referenced_models": [
+                    "PaymentsEnum"
+                ]
+            }
+        },
+        {
+            "operation": "SSNCheck",
+            "label": "POST api/VPOS/SSNCheck",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/Api/POST-api-VPOS-SSNCheck",
+            "title": "POST api/VPOS/SSNCheck",
+            "description": "",
+            "request": {
+                "model": "SSNCheckRequest",
+                "fields": [
+                    {
+                        "Name": "ClientID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Username",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Password",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "PaymentID",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "SSN",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "IdentifierType",
+                        "Description": "",
+                        "Type": "IdentifierType",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"ClientID\": \"sample string 1\", \"Username\": \"sample string 2\", \"Password\": \"sample string 3\", \"PaymentID\": \"sample string 4\", \"SSN\": \"sample string 5\", \"IdentifierType\": 1 }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<SSNCheckRequest xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <ClientID>sample string 1</ClientID> <Username>sample string 2</Username> <Password>sample string 3</Password> <PaymentID>sample string 4</PaymentID> <SSN>sample string 5</SSN> <IdentifierType>SSN</IdentifierType> </SSNCheckRequest>"
+                    }
+                ],
+                "referenced_models": [
+                    "IdentifierType"
+                ]
+            },
+            "response": {
+                "model": "SSNCheckResponse",
+                "fields": [
+                    {
+                        "Name": "Status",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    },
+                    {
+                        "Name": "Message",
+                        "Description": "",
+                        "Type": "string",
+                        "Additional information": "None."
+                    }
+                ],
+                "samples": [
+                    {
+                        "format": "json",
+                        "body": "{ \"Status\": \"sample string 1\", \"Message\": \"sample string 2\" }"
+                    },
+                    {
+                        "format": "xml",
+                        "body": "<SSNCheckResponse xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"> <Status>sample string 1</Status> <Message>sample string 2</Message> </SSNCheckResponse>"
+                    }
+                ],
+                "referenced_models": []
+            }
+        }
+    ],
+    "models": {
+        "ActivateBindingRequest": {
+            "model": "ActivateBindingRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=ActivateBindingRequest",
+            "title": "ActivateBindingRequest",
+            "fields": [
+                {
+                    "Name": "ClientID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentType",
+                    "Description": "",
+                    "Type": "PaymentsEnum",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": [
+                "PaymentsEnum"
+            ]
+        },
+        "ActivateBindingResponse": {
+            "model": "ActivateBindingResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=ActivateBindingResponse",
+            "title": "ActivateBindingResponse",
+            "fields": [
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "BankInfo": {
+            "model": "BankInfo",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=BankInfo",
+            "title": "BankInfo",
+            "fields": [
+                {
+                    "Name": "BankName",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "BankCountryCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "BankCountryName",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "CancelPaymentRequest": {
+            "model": "CancelPaymentRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=CancelPaymentRequest",
+            "title": "CancelPaymentRequest",
+            "fields": [
+                {
+                    "Name": "PaymentID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "CancelPaymentResponse": {
+            "model": "CancelPaymentResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=CancelPaymentResponse",
+            "title": "CancelPaymentResponse",
+            "fields": [
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Opaque",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "CardBindingFiled": {
+            "model": "CardBindingFiled",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=CardBindingFiled",
+            "title": "CardBindingFiled",
+            "fields": [
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardPan",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ExpDate",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "IsAvtive",
+                    "Description": "",
+                    "Type": "boolean",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "ConfirmPaymentRequest": {
+            "model": "ConfirmPaymentRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=ConfirmPaymentRequest",
+            "title": "ConfirmPaymentRequest",
+            "fields": [
+                {
+                    "Name": "PaymentID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Amount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "ConfirmPaymentResponse": {
+            "model": "ConfirmPaymentResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=ConfirmPaymentResponse",
+            "title": "ConfirmPaymentResponse",
+            "fields": [
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Opaque",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "DeactivateBindingRequest": {
+            "model": "DeactivateBindingRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=DeactivateBindingRequest",
+            "title": "DeactivateBindingRequest",
+            "fields": [
+                {
+                    "Name": "ClientID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentType",
+                    "Description": "",
+                    "Type": "PaymentsEnum",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": [
+                "PaymentsEnum"
+            ]
+        },
+        "DeactivateBindingResponse": {
+            "model": "DeactivateBindingResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=DeactivateBindingResponse",
+            "title": "DeactivateBindingResponse",
+            "fields": [
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "GetBindingsRequest": {
+            "model": "GetBindingsRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=GetBindingsRequest",
+            "title": "GetBindingsRequest",
+            "fields": [
+                {
+                    "Name": "ClientID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentType",
+                    "Description": "",
+                    "Type": "PaymentsEnum",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": [
+                "PaymentsEnum"
+            ]
+        },
+        "GetBindingsResponse": {
+            "model": "GetBindingsResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=GetBindingsResponse",
+            "title": "GetBindingsResponse",
+            "fields": [
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardBindingFileds",
+                    "Description": "",
+                    "Type": "Collection of CardBindingFiled",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": [
+                "CardBindingFiled"
+            ]
+        },
+        "GetPaymentIdRequest": {
+            "model": "GetPaymentIdRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=GetPaymentIdRequest",
+            "title": "GetPaymentIdRequest",
+            "fields": [
+                {
+                    "Name": "ClientID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "OrderID",
+                    "Description": "",
+                    "Type": "integer",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "GetPaymentIdResponse": {
+            "model": "GetPaymentIdResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=GetPaymentIdResponse",
+            "title": "GetPaymentIdResponse",
+            "fields": [
+                {
+                    "Name": "PaymentId",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "GetPendingTransactionsRequest": {
+            "model": "GetPendingTransactionsRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=GetPendingTransactionsRequest",
+            "title": "GetPendingTransactionsRequest",
+            "fields": [
+                {
+                    "Name": "ClientID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "StartDate",
+                    "Description": "",
+                    "Type": "date",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "EndDate",
+                    "Description": "",
+                    "Type": "date",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "GetPendingTransactionsResponse": {
+            "model": "GetPendingTransactionsResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=GetPendingTransactionsResponse",
+            "title": "GetPendingTransactionsResponse",
+            "fields": [
+                {
+                    "Name": "OrderId",
+                    "Description": "",
+                    "Type": "integer",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ClientName",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardNumber",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Amount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentDate",
+                    "Description": "",
+                    "Type": "date",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ErrorMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "IdentifierType": {
+            "model": "IdentifierType",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=IdentifierType",
+            "title": "IdentifierType",
+            "fields": [
+                {
+                    "Name": "SSN",
+                    "Value": "1",
+                    "Description": ""
+                },
+                {
+                    "Name": "CertificateOfAbsenceOfSSN",
+                    "Value": "2",
+                    "Description": ""
+                },
+                {
+                    "Name": "ARMPassport",
+                    "Value": "3",
+                    "Description": ""
+                },
+                {
+                    "Name": "IdCard",
+                    "Value": "4",
+                    "Description": ""
+                },
+                {
+                    "Name": "InternationalPassport",
+                    "Value": "5",
+                    "Description": ""
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "InitPaymentRequest": {
+            "model": "InitPaymentRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=InitPaymentRequest",
+            "title": "InitPaymentRequest",
+            "fields": [
+                {
+                    "Name": "ClientID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Amount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "OrderID",
+                    "Description": "",
+                    "Type": "integer",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "BackURL",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Description",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Currency",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Opaque",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Timeout",
+                    "Description": "",
+                    "Type": "integer",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentServiceType",
+                    "Description": "",
+                    "Type": "integer",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "InitPaymentResponse": {
+            "model": "InitPaymentResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=InitPaymentResponse",
+            "title": "InitPaymentResponse",
+            "fields": [
+                {
+                    "Name": "PaymentID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "integer",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "MakeBindingPaymentRequest": {
+            "model": "MakeBindingPaymentRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=MakeBindingPaymentRequest",
+            "title": "MakeBindingPaymentRequest",
+            "fields": [
+                {
+                    "Name": "ClientID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Amount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "OrderID",
+                    "Description": "",
+                    "Type": "integer",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "BackURL",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentType",
+                    "Description": "",
+                    "Type": "PaymentsEnum",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Description",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Currency",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Opaque",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": [
+                "PaymentsEnum"
+            ]
+        },
+        "MakeBindingPaymentResponse": {
+            "model": "MakeBindingPaymentResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=MakeBindingPaymentResponse",
+            "title": "MakeBindingPaymentResponse",
+            "fields": [
+                {
+                    "Name": "PaymentID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Amount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ApprovedAmount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ApprovalCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardNumber",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ClientName",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Currency",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "DateTime",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "DepositedAmount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Description",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "MDOrderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "MerchantId",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "TerminalId",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "OrderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentState",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentType",
+                    "Description": "",
+                    "Type": "PaymentsEnum",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PrimaryRC",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ExpDate",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ProcessingIP",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "OrderStatus",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "BindingID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "RefundedAmount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Opaque",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "TrxnDescription",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "rrn",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ActionCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "AcsUrl",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaReq",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "TermUrl",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": [
+                "PaymentsEnum"
+            ]
+        },
+        "PaymentDetailsRequest": {
+            "model": "PaymentDetailsRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=PaymentDetailsRequest",
+            "title": "PaymentDetailsRequest",
+            "fields": [
+                {
+                    "Name": "PaymentID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "PaymentDetailsResponse": {
+            "model": "PaymentDetailsResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=PaymentDetailsResponse",
+            "title": "PaymentDetailsResponse",
+            "fields": [
+                {
+                    "Name": "Amount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ApprovedAmount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ApprovalCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardNumber",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ClientName",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ClientEmail",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Currency",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "DateTime",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "DepositedAmount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Description",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "MDOrderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "MerchantId",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "TerminalId",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "OrderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentState",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentType",
+                    "Description": "",
+                    "Type": "PaymentsEnum",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PrimaryRC",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ExpDate",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ProcessingIP",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "OrderStatus",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "CardHolderID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "BindingID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "RefundedAmount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Opaque",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "TrxnDescription",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "rrn",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ActionCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ExchangeRate",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "BankInfo",
+                    "Description": "",
+                    "Type": "BankInfo",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": [
+                "BankInfo",
+                "PaymentsEnum"
+            ]
+        },
+        "PaymentsEnum": {
+            "model": "PaymentsEnum",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=PaymentsEnum",
+            "title": "PaymentsEnum",
+            "fields": [
+                {
+                    "Name": "None",
+                    "Value": "0",
+                    "Description": ""
+                },
+                {
+                    "Name": "Arca",
+                    "Value": "1",
+                    "Description": ""
+                },
+                {
+                    "Name": "MasterCard",
+                    "Value": "2",
+                    "Description": ""
+                },
+                {
+                    "Name": "Visa",
+                    "Value": "3",
+                    "Description": ""
+                },
+                {
+                    "Name": "Reward",
+                    "Value": "4",
+                    "Description": ""
+                },
+                {
+                    "Name": "MainRest",
+                    "Value": "5",
+                    "Description": ""
+                },
+                {
+                    "Name": "BindingMainRest",
+                    "Value": "6",
+                    "Description": ""
+                },
+                {
+                    "Name": "PayPal",
+                    "Value": "7",
+                    "Description": ""
+                },
+                {
+                    "Name": "PayX",
+                    "Value": "11",
+                    "Description": ""
+                },
+                {
+                    "Name": "MirCard",
+                    "Value": "12",
+                    "Description": ""
+                },
+                {
+                    "Name": "ApplePay",
+                    "Value": "13",
+                    "Description": ""
+                },
+                {
+                    "Name": "EPGCardApplePay",
+                    "Value": "14",
+                    "Description": ""
+                },
+                {
+                    "Name": "Amex",
+                    "Value": "17",
+                    "Description": ""
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "RefundPaymentRequest": {
+            "model": "RefundPaymentRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=RefundPaymentRequest",
+            "title": "RefundPaymentRequest",
+            "fields": [
+                {
+                    "Name": "PaymentID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Amount",
+                    "Description": "",
+                    "Type": "decimal number",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "RefundPaymentResponse": {
+            "model": "RefundPaymentResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=RefundPaymentResponse",
+            "title": "RefundPaymentResponse",
+            "fields": [
+                {
+                    "Name": "ResponseCode",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "ResponseMessage",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Opaque",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        },
+        "SSNCheckRequest": {
+            "model": "SSNCheckRequest",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=SSNCheckRequest",
+            "title": "SSNCheckRequest",
+            "fields": [
+                {
+                    "Name": "ClientID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Username",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Password",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "PaymentID",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "SSN",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "IdentifierType",
+                    "Description": "",
+                    "Type": "IdentifierType",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": [
+                "IdentifierType"
+            ]
+        },
+        "SSNCheckResponse": {
+            "model": "SSNCheckResponse",
+            "url": "https://servicestest.ameriabank.am/VPOS/Help/ResourceModel?modelName=SSNCheckResponse",
+            "title": "SSNCheckResponse",
+            "fields": [
+                {
+                    "Name": "Status",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                },
+                {
+                    "Name": "Message",
+                    "Description": "",
+                    "Type": "string",
+                    "Additional information": "None."
+                }
+            ],
+            "samples": [],
+            "referenced_models": []
+        }
+    }
+}

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>POST api/VPOS/GetPaymentDetails</title>
+    <link href="/VPOS/Content/style.css" rel="stylesheet"/>
+<link href="/VPOS/Content/Site.css" rel="stylesheet"/>
+
+    <script src="/VPOS/Scripts/modernizr-2.8.3.js"></script>
+
+    <link rel="SHORTCUT ICON" src="/VPOS/favicon.ico" />
+</head>
+<body>
+    
+    </div>
+    
+
+<link type="text/css" href="/VPOS/Areas/HelpPage/HelpPage.css" rel="stylesheet" />
+<div id="body" class="help-page">
+    <section class="featured">
+        <div class="content-wrapper">
+            <p>
+                <a href="/VPOS/Help">Help Page Home</a>
+            </p>
+        </div>
+    </section>
+    <section class="content-wrapper main-content clear-fix">
+        
+<h1>POST api/VPOS/GetPaymentDetails</h1>
+<div>
+    <p>Get Order Status</p>
+
+    <h2>Request Information</h2>
+
+    <h3>URI Parameters</h3>
+        <p>None.</p>
+
+
+
+    <h3>Body Parameters</h3>
+
+    <p>OrderStatusRequest model</p>
+
+<a href="/VPOS/Help/ResourceModel?modelName=PaymentDetailsRequest">PaymentDetailsRequest</a>    <table class="help-page-table">
+        <thead>
+            <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td class="parameter-name">PaymentID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Username</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Password</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+
+        <h3>Request Formats</h3>
+
+<div>
+        <h4 class="sample-header">application/json, text/json</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+{
+  &quot;PaymentID&quot;: &quot;sample string 1&quot;,
+  &quot;Username&quot;: &quot;sample string 2&quot;,
+  &quot;Password&quot;: &quot;sample string 3&quot;
+}
+</pre>
+        </div>
+        <h4 class="sample-header">application/xml, text/xml</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+&lt;PaymentDetailsRequest xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;PaymentID&gt;sample string 1&lt;/PaymentID&gt;
+  &lt;Username&gt;sample string 2&lt;/Username&gt;
+  &lt;Password&gt;sample string 3&lt;/Password&gt;
+&lt;/PaymentDetailsRequest&gt;
+</pre>
+        </div>
+        <h4 class="sample-header">application/x-www-form-urlencoded</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+    <div class="warning-message-container">
+        <p>Failed to generate the sample for media type &#39;application/x-www-form-urlencoded&#39;. Cannot use formatter &#39;JQueryMvcFormUrlEncodedFormatter&#39; to write type &#39;PaymentDetailsRequest&#39;.</p>
+    </div>
+
+        </div>
+</div>
+    <h2>Response Information</h2>
+
+    <h3>Resource Description</h3>
+
+    <p>OrderStatusResponse model</p>
+
+<a href="/VPOS/Help/ResourceModel?modelName=PaymentDetailsResponse">PaymentDetailsResponse</a>    <table class="help-page-table">
+        <thead>
+            <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td class="parameter-name">Amount</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        decimal number
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ApprovedAmount</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        decimal number
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ApprovalCode</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">CardNumber</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ClientName</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ClientEmail</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Currency</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">DateTime</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">DepositedAmount</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        decimal number
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Description</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">MDOrderID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">MerchantId</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">TerminalId</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">OrderID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">PaymentState</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">PaymentType</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        <a href="/VPOS/Help/ResourceModel?modelName=PaymentsEnum">PaymentsEnum</a>
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">PrimaryRC</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ResponseCode</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ExpDate</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ProcessingIP</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">OrderStatus</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">CardHolderID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">BindingID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">RefundedAmount</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        decimal number
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Opaque</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">TrxnDescription</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">rrn</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ActionCode</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ExchangeRate</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        decimal number
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">BankInfo</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        <a href="/VPOS/Help/ResourceModel?modelName=BankInfo">BankInfo</a>
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+
+        <h3>Response Formats</h3>
+
+<div>
+        <h4 class="sample-header">application/json, text/json</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+{
+  &quot;Amount&quot;: 1.0,
+  &quot;ApprovedAmount&quot;: 2.0,
+  &quot;ApprovalCode&quot;: &quot;sample string 3&quot;,
+  &quot;CardNumber&quot;: &quot;sample string 4&quot;,
+  &quot;ClientName&quot;: &quot;sample string 5&quot;,
+  &quot;ClientEmail&quot;: &quot;sample string 6&quot;,
+  &quot;Currency&quot;: &quot;sample string 7&quot;,
+  &quot;DateTime&quot;: &quot;sample string 8&quot;,
+  &quot;DepositedAmount&quot;: 9.0,
+  &quot;Description&quot;: &quot;sample string 10&quot;,
+  &quot;MDOrderID&quot;: &quot;sample string 11&quot;,
+  &quot;MerchantId&quot;: &quot;sample string 12&quot;,
+  &quot;TerminalId&quot;: &quot;sample string 13&quot;,
+  &quot;OrderID&quot;: &quot;sample string 14&quot;,
+  &quot;PaymentState&quot;: &quot;sample string 15&quot;,
+  &quot;PaymentType&quot;: 0,
+  &quot;PrimaryRC&quot;: &quot;sample string 16&quot;,
+  &quot;ResponseCode&quot;: &quot;sample string 17&quot;,
+  &quot;ExpDate&quot;: &quot;sample string 18&quot;,
+  &quot;ProcessingIP&quot;: &quot;sample string 19&quot;,
+  &quot;OrderStatus&quot;: &quot;sample string 20&quot;,
+  &quot;CardHolderID&quot;: &quot;sample string 21&quot;,
+  &quot;BindingID&quot;: &quot;sample string 22&quot;,
+  &quot;RefundedAmount&quot;: 23.0,
+  &quot;Opaque&quot;: &quot;sample string 24&quot;,
+  &quot;TrxnDescription&quot;: &quot;sample string 25&quot;,
+  &quot;rrn&quot;: &quot;sample string 26&quot;,
+  &quot;ActionCode&quot;: &quot;sample string 27&quot;,
+  &quot;ExchangeRate&quot;: 28.0,
+  &quot;BankInfo&quot;: {
+    &quot;BankName&quot;: &quot;sample string 1&quot;,
+    &quot;BankCountryCode&quot;: &quot;sample string 2&quot;,
+    &quot;BankCountryName&quot;: &quot;sample string 3&quot;
+  }
+}
+</pre>
+        </div>
+        <h4 class="sample-header">application/xml, text/xml</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+&lt;PaymentDetailsResponse xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;Amount&gt;1&lt;/Amount&gt;
+  &lt;ApprovedAmount&gt;2&lt;/ApprovedAmount&gt;
+  &lt;ApprovalCode&gt;sample string 3&lt;/ApprovalCode&gt;
+  &lt;CardNumber&gt;sample string 4&lt;/CardNumber&gt;
+  &lt;ClientName&gt;sample string 5&lt;/ClientName&gt;
+  &lt;ClientEmail&gt;sample string 6&lt;/ClientEmail&gt;
+  &lt;Currency&gt;sample string 7&lt;/Currency&gt;
+  &lt;DateTime&gt;sample string 8&lt;/DateTime&gt;
+  &lt;DepositedAmount&gt;9&lt;/DepositedAmount&gt;
+  &lt;Description&gt;sample string 10&lt;/Description&gt;
+  &lt;MDOrderID&gt;sample string 11&lt;/MDOrderID&gt;
+  &lt;MerchantId&gt;sample string 12&lt;/MerchantId&gt;
+  &lt;TerminalId&gt;sample string 13&lt;/TerminalId&gt;
+  &lt;OrderID&gt;sample string 14&lt;/OrderID&gt;
+  &lt;PaymentState&gt;sample string 15&lt;/PaymentState&gt;
+  &lt;PaymentType&gt;None&lt;/PaymentType&gt;
+  &lt;PrimaryRC&gt;sample string 16&lt;/PrimaryRC&gt;
+  &lt;ResponseCode&gt;sample string 17&lt;/ResponseCode&gt;
+  &lt;ExpDate&gt;sample string 18&lt;/ExpDate&gt;
+  &lt;ProcessingIP&gt;sample string 19&lt;/ProcessingIP&gt;
+  &lt;OrderStatus&gt;sample string 20&lt;/OrderStatus&gt;
+  &lt;CardHolderID&gt;sample string 21&lt;/CardHolderID&gt;
+  &lt;BindingID&gt;sample string 22&lt;/BindingID&gt;
+  &lt;RefundedAmount&gt;23&lt;/RefundedAmount&gt;
+  &lt;Opaque&gt;sample string 24&lt;/Opaque&gt;
+  &lt;TrxnDescription&gt;sample string 25&lt;/TrxnDescription&gt;
+  &lt;rrn&gt;sample string 26&lt;/rrn&gt;
+  &lt;ActionCode&gt;sample string 27&lt;/ActionCode&gt;
+  &lt;ExchangeRate&gt;28&lt;/ExchangeRate&gt;
+  &lt;BankInfo&gt;
+    &lt;BankName&gt;sample string 1&lt;/BankName&gt;
+    &lt;BankCountryCode&gt;sample string 2&lt;/BankCountryCode&gt;
+    &lt;BankCountryName&gt;sample string 3&lt;/BankCountryName&gt;
+  &lt;/BankInfo&gt;
+&lt;/PaymentDetailsResponse&gt;
+</pre>
+        </div>
+</div>
+</div>
+    </section>
+</div>
+
+
+    
+    
+
+    <script src="/VPOS/Scripts/jquery-3.3.1.js"></script>
+
+    <script src="/VPOS/Scripts/bootstrap.js"></script>
+
+    
+</body>
+</html>

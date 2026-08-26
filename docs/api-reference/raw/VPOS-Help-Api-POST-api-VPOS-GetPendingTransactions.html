@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>POST api/VPOS/GetPendingTransactions</title>
+    <link href="/VPOS/Content/style.css" rel="stylesheet"/>
+<link href="/VPOS/Content/Site.css" rel="stylesheet"/>
+
+    <script src="/VPOS/Scripts/modernizr-2.8.3.js"></script>
+
+    <link rel="SHORTCUT ICON" src="/VPOS/favicon.ico" />
+</head>
+<body>
+    
+    </div>
+    
+
+<link type="text/css" href="/VPOS/Areas/HelpPage/HelpPage.css" rel="stylesheet" />
+<div id="body" class="help-page">
+    <section class="featured">
+        <div class="content-wrapper">
+            <p>
+                <a href="/VPOS/Help">Help Page Home</a>
+            </p>
+        </div>
+    </section>
+    <section class="content-wrapper main-content clear-fix">
+        
+<h1>POST api/VPOS/GetPendingTransactions</h1>
+<div>
+    <p>Get Pending Transactions</p>
+
+    <h2>Request Information</h2>
+
+    <h3>URI Parameters</h3>
+        <p>None.</p>
+
+
+
+    <h3>Body Parameters</h3>
+
+    <p></p>
+
+<a href="/VPOS/Help/ResourceModel?modelName=GetPendingTransactionsRequest">GetPendingTransactionsRequest</a>    <table class="help-page-table">
+        <thead>
+            <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td class="parameter-name">ClientID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Username</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Password</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">StartDate</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        date
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">EndDate</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        date
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+
+        <h3>Request Formats</h3>
+
+<div>
+        <h4 class="sample-header">application/json, text/json</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+{
+  &quot;ClientID&quot;: &quot;sample string 1&quot;,
+  &quot;Username&quot;: &quot;sample string 2&quot;,
+  &quot;Password&quot;: &quot;sample string 3&quot;,
+  &quot;StartDate&quot;: &quot;2026-08-23T19:46:22.3011509+04:00&quot;,
+  &quot;EndDate&quot;: &quot;2026-08-23T19:46:22.3011509+04:00&quot;
+}
+</pre>
+        </div>
+        <h4 class="sample-header">application/xml, text/xml</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+&lt;GetPendingTransactionsRequest xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;ClientID&gt;sample string 1&lt;/ClientID&gt;
+  &lt;Username&gt;sample string 2&lt;/Username&gt;
+  &lt;Password&gt;sample string 3&lt;/Password&gt;
+  &lt;StartDate&gt;2026-08-23T19:46:22.3011509+04:00&lt;/StartDate&gt;
+  &lt;EndDate&gt;2026-08-23T19:46:22.3011509+04:00&lt;/EndDate&gt;
+&lt;/GetPendingTransactionsRequest&gt;
+</pre>
+        </div>
+        <h4 class="sample-header">application/x-www-form-urlencoded</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+    <div class="warning-message-container">
+        <p>Failed to generate the sample for media type &#39;application/x-www-form-urlencoded&#39;. Cannot use formatter &#39;JQueryMvcFormUrlEncodedFormatter&#39; to write type &#39;GetPendingTransactionsRequest&#39;.</p>
+    </div>
+
+        </div>
+</div>
+    <h2>Response Information</h2>
+
+    <h3>Resource Description</h3>
+
+    <p></p>
+
+        Collection of <a href="/VPOS/Help/ResourceModel?modelName=GetPendingTransactionsResponse">GetPendingTransactionsResponse</a>
+    <table class="help-page-table">
+        <thead>
+            <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td class="parameter-name">OrderId</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        integer
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ClientName</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">CardNumber</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Amount</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        decimal number
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">PaymentDate</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        date
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ErrorMessage</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+
+        <h3>Response Formats</h3>
+
+<div>
+        <h4 class="sample-header">application/json, text/json</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+[
+  {
+    &quot;OrderId&quot;: 1,
+    &quot;ClientName&quot;: &quot;sample string 2&quot;,
+    &quot;CardNumber&quot;: &quot;sample string 3&quot;,
+    &quot;Amount&quot;: 4.0,
+    &quot;PaymentDate&quot;: &quot;2026-08-23T19:46:22.3323991+04:00&quot;,
+    &quot;ErrorMessage&quot;: &quot;sample string 6&quot;
+  },
+  {
+    &quot;OrderId&quot;: 1,
+    &quot;ClientName&quot;: &quot;sample string 2&quot;,
+    &quot;CardNumber&quot;: &quot;sample string 3&quot;,
+    &quot;Amount&quot;: 4.0,
+    &quot;PaymentDate&quot;: &quot;2026-08-23T19:46:22.3323991+04:00&quot;,
+    &quot;ErrorMessage&quot;: &quot;sample string 6&quot;
+  }
+]
+</pre>
+        </div>
+        <h4 class="sample-header">application/xml, text/xml</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+&lt;ArrayOfGetPendingTransactionsResponse xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;GetPendingTransactionsResponse&gt;
+    &lt;OrderId&gt;1&lt;/OrderId&gt;
+    &lt;ClientName&gt;sample string 2&lt;/ClientName&gt;
+    &lt;CardNumber&gt;sample string 3&lt;/CardNumber&gt;
+    &lt;Amount&gt;4&lt;/Amount&gt;
+    &lt;PaymentDate&gt;2026-08-23T19:46:22.3323991+04:00&lt;/PaymentDate&gt;
+    &lt;ErrorMessage&gt;sample string 6&lt;/ErrorMessage&gt;
+  &lt;/GetPendingTransactionsResponse&gt;
+  &lt;GetPendingTransactionsResponse&gt;
+    &lt;OrderId&gt;1&lt;/OrderId&gt;
+    &lt;ClientName&gt;sample string 2&lt;/ClientName&gt;
+    &lt;CardNumber&gt;sample string 3&lt;/CardNumber&gt;
+    &lt;Amount&gt;4&lt;/Amount&gt;
+    &lt;PaymentDate&gt;2026-08-23T19:46:22.3323991+04:00&lt;/PaymentDate&gt;
+    &lt;ErrorMessage&gt;sample string 6&lt;/ErrorMessage&gt;
+  &lt;/GetPendingTransactionsResponse&gt;
+&lt;/ArrayOfGetPendingTransactionsResponse&gt;
+</pre>
+        </div>
+</div>
+</div>
+    </section>
+</div>
+
+
+    
+    
+
+    <script src="/VPOS/Scripts/jquery-3.3.1.js"></script>
+
+    <script src="/VPOS/Scripts/bootstrap.js"></script>
+
+    
+</body>
+</html>

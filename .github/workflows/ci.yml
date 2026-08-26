@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }} / ${{ matrix.deps }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+        deps: ['lowest', 'highest']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, dom, json, mbstring
+          coverage: ${{ (matrix.php == '8.3' && matrix.deps == 'highest') && 'pcov' || 'none' }}
+          ini-values: error_reporting=E_ALL
+
+      - uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: ${{ matrix.deps }}
+
+      - run: composer test
+
+      - name: Coverage threshold
+        if: matrix.php == '8.3' && matrix.deps == 'highest'
+        run: |
+          composer coverage
+          composer coverage:check
+
+      - name: Mutation testing
+        if: matrix.php == '8.3' && matrix.deps == 'highest'
+        run: composer infection

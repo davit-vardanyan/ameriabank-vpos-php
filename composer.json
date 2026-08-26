@@ -1,0 +1,85 @@
+{
+    "name": "davit-vardanyan/ameriabank-vpos-php",
+    "description": "Unofficial PHP client for the Ameriabank vPOS 3.1 payment gateway.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "ameriabank",
+        "vpos",
+        "payment",
+        "gateway",
+        "armenia",
+        "arca",
+        "psr-18"
+    ],
+    "authors": [
+        {
+            "name": "Davit Vardanyan",
+            "homepage": "https://github.com/davit-vardanyan"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "ext-json": "*",
+        "php-http/discovery": "^1.20",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^2.0",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.45",
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "guzzlehttp/guzzle": "^7.9",
+        "infection/infection": "^0.35",
+        "nyholm/psr7": "^1.8",
+        "php-http/mock-client": "^1.6",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.2",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpunit/phpunit": "^12.5",
+        "rector/rector": "^2.0",
+        "roave/backward-compatibility-check": "^8.0"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "PSR-18 HTTP client implementation",
+        "symfony/http-client": "PSR-18 HTTP client implementation"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "DavitVardanyan\\AmeriabankVpos\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DavitVardanyan\\AmeriabankVpos\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
+        },
+        "platform": {
+            "php": "8.3.2"
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "bc": "roave-backward-compatibility-check",
+        "coverage": "phpunit --coverage-clover=build/clover.xml --coverage-text",
+        "coverage:check": "@php -r \"\\$x = simplexml_load_file('build/clover.xml'); \\$m = \\$x->project->metrics; \\$c = (int) \\$m['coveredstatements']; \\$t = (int) \\$m['statements']; \\$p = \\$t > 0 ? 100 * \\$c / \\$t : 0.0; printf('Line coverage: %.2f%% (%d/%d)' . PHP_EOL, \\$p, \\$c, \\$t); exit(\\$p < 100.0 ? 1 : 0);\"",
+        "cs": "php-cs-fixer fix",
+        "cs:check": "php-cs-fixer fix --dry-run --diff",
+        "infection": "infection",
+        "rector": "rector process --dry-run",
+        "stan": "phpstan analyse",
+        "test": "phpunit"
+    }
+}

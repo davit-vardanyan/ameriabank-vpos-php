@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>POST api/VPOS/ActivateBinding</title>
+    <link href="/VPOS/Content/style.css" rel="stylesheet"/>
+<link href="/VPOS/Content/Site.css" rel="stylesheet"/>
+
+    <script src="/VPOS/Scripts/modernizr-2.8.3.js"></script>
+
+    <link rel="SHORTCUT ICON" src="/VPOS/favicon.ico" />
+</head>
+<body>
+    
+    </div>
+    
+
+<link type="text/css" href="/VPOS/Areas/HelpPage/HelpPage.css" rel="stylesheet" />
+<div id="body" class="help-page">
+    <section class="featured">
+        <div class="content-wrapper">
+            <p>
+                <a href="/VPOS/Help">Help Page Home</a>
+            </p>
+        </div>
+    </section>
+    <section class="content-wrapper main-content clear-fix">
+        
+<h1>POST api/VPOS/ActivateBinding</h1>
+<div>
+    <p>Activate Binding</p>
+
+    <h2>Request Information</h2>
+
+    <h3>URI Parameters</h3>
+        <p>None.</p>
+
+
+
+    <h3>Body Parameters</h3>
+
+    <p>ActivateBindingRequest model</p>
+
+<a href="/VPOS/Help/ResourceModel?modelName=ActivateBindingRequest">ActivateBindingRequest</a>    <table class="help-page-table">
+        <thead>
+            <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td class="parameter-name">ClientID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Username</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">Password</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">CardHolderID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">PaymentType</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        <a href="/VPOS/Help/ResourceModel?modelName=PaymentsEnum">PaymentsEnum</a>
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+
+        <h3>Request Formats</h3>
+
+<div>
+        <h4 class="sample-header">application/json, text/json</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+{
+  &quot;ClientID&quot;: &quot;sample string 1&quot;,
+  &quot;Username&quot;: &quot;sample string 2&quot;,
+  &quot;Password&quot;: &quot;sample string 3&quot;,
+  &quot;CardHolderID&quot;: &quot;sample string 4&quot;,
+  &quot;PaymentType&quot;: 0
+}
+</pre>
+        </div>
+        <h4 class="sample-header">application/xml, text/xml</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+&lt;ActivateBindingRequest xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;ClientID&gt;sample string 1&lt;/ClientID&gt;
+  &lt;Username&gt;sample string 2&lt;/Username&gt;
+  &lt;Password&gt;sample string 3&lt;/Password&gt;
+  &lt;CardHolderID&gt;sample string 4&lt;/CardHolderID&gt;
+  &lt;PaymentType&gt;None&lt;/PaymentType&gt;
+&lt;/ActivateBindingRequest&gt;
+</pre>
+        </div>
+        <h4 class="sample-header">application/x-www-form-urlencoded</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+    <div class="warning-message-container">
+        <p>Failed to generate the sample for media type &#39;application/x-www-form-urlencoded&#39;. Cannot use formatter &#39;JQueryMvcFormUrlEncodedFormatter&#39; to write type &#39;ActivateBindingRequest&#39;.</p>
+    </div>
+
+        </div>
+</div>
+    <h2>Response Information</h2>
+
+    <h3>Resource Description</h3>
+
+    <p>ActivateBindingResponse</p>
+
+<a href="/VPOS/Help/ResourceModel?modelName=ActivateBindingResponse">ActivateBindingResponse</a>    <table class="help-page-table">
+        <thead>
+            <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td class="parameter-name">ResponseCode</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">ResponseMessage</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">CardHolderID</td>
+                    <td class="parameter-documentation">
+                        <p></p>
+                    </td>
+                    <td class="parameter-type">
+                        string
+                    </td>
+                    <td class="parameter-annotations">
+                            <p>None.</p>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+
+        <h3>Response Formats</h3>
+
+<div>
+        <h4 class="sample-header">application/json, text/json</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+{
+  &quot;ResponseCode&quot;: &quot;sample string 1&quot;,
+  &quot;ResponseMessage&quot;: &quot;sample string 2&quot;,
+  &quot;CardHolderID&quot;: &quot;sample string 3&quot;
+}
+</pre>
+        </div>
+        <h4 class="sample-header">application/xml, text/xml</h4>
+        <div class="sample-content">
+            <span><b>Sample:</b></span>
+<pre class="wrapped">
+&lt;ActivateBindingResponse xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;ResponseCode&gt;sample string 1&lt;/ResponseCode&gt;
+  &lt;ResponseMessage&gt;sample string 2&lt;/ResponseMessage&gt;
+  &lt;CardHolderID&gt;sample string 3&lt;/CardHolderID&gt;
+&lt;/ActivateBindingResponse&gt;
+</pre>
+        </div>
+</div>
+</div>
+    </section>
+</div>
+
+
+    
+    
+
+    <script src="/VPOS/Scripts/jquery-3.3.1.js"></script>
+
+    <script src="/VPOS/Scripts/bootstrap.js"></script>
+
+    
+</body>
+</html>
