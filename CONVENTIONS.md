@@ -851,7 +851,11 @@ hydrator; they are permitted to differ here, and they must.
 
 ```php
 $vpos = new Vpos(
-    credentials: new Credentials('000000', 'placeholder-user', 'placeholder-pass'),
+    credentials: new Credentials(
+        clientId: '00000000-0000-0000-0000-000000000000',
+        username: 'placeholder-user',
+        password: 'placeholder-pass',
+    ),
     environment: Environment::Test,   // required; no default
     httpClient: null,                 // null → php-http/discovery
     logger: new NullLogger(),
@@ -892,6 +896,21 @@ because a check cannot be made against an absent value. See §4.10 and §13.
 
 Credentials are injected by the transport. **`ClientID`, `Username` and
 `Password` must never appear in a request DTO the caller constructs.**
+`ClientID` is on 8 of the manifest's 12 request models — 7 of the 11 shipped
+operations — and is absent from `PaymentDetailsRequest`, `ConfirmPaymentRequest`,
+`CancelPaymentRequest` and `RefundPaymentRequest`; `Username` and `Password` are
+on all 12. Never write that `ClientID` travels on every request.
+
+The `ClientID` above is an **illustrative all-zero GUID, not a format claim**.
+It used to read `'000000'`, and a six-digit example invites a reader to infer a
+length or a digits-only constraint that nothing declares: `api-surface.json`
+types the field `string` and says nothing about its shape, and the only value
+this project has ever sent is the sandbox merchant's, which happens to be a
+36-character GUID. One merchant is not a format. The example is shaped to
+resemble the real value so that no reader mistakes it for a rule — the correct
+response to "what may a `ClientID` look like?" is to use whatever the bank
+issued, not to validate against either shape. Never put a real `ClientID` in an
+example, a test literal or a docblock.
 
 ### Transport
 
@@ -975,6 +994,42 @@ Non-negotiable.
   parameter.
 - `Credentials` implements `__debugInfo()` and `__serialize()` returning
   redacted values. `var_dump()` on a client must never print a password.
+- **Only `password` is wrapped in `\SensitiveParameterValue`, and the asymmetry
+  is deliberate rather than an oversight.** `Credentials` holds three fields:
+  `password` is the secret; `clientId` and `username` are identifiers. Both
+  identifiers cross the wire in cleartext, in the request body, on every call
+  that carries them, by design, and neither authenticates anything on its own.
+  Wrapping them would advertise a protection the protocol does not provide and
+  cannot. The evidence is `api-surface.json`, which §2 ranks above this prose:
+  across its twelve request models `Username` and `Password` are declared
+  `string` on all twelve, and `ClientID` on eight — `InitPaymentRequest`,
+  `GetPaymentIdRequest`, `GetPendingTransactionsRequest`, `GetBindingsRequest`,
+  `ActivateBindingRequest`, `DeactivateBindingRequest`,
+  `MakeBindingPaymentRequest` and `SSNCheckRequest`, which is seven of the
+  eleven operations this package ships, `SSNCheck` being excluded by §7.
+  **`ClientID` is therefore not universal.** The four request models that omit
+  it — `PaymentDetailsRequest`, `ConfirmPaymentRequest`, `CancelPaymentRequest`
+  and `RefundPaymentRequest`, the operations keyed on a `PaymentID` — are why
+  `Credentials` exposes `merchantFields()` and `userFields()` rather than one
+  array. None of the three names appears in any **response** model: zero
+  occurrences, case-insensitively, across all twelve and across `BankInfo`,
+  `CardBindingFiled`, `IdentifierType` and `PaymentsEnum`. Read all of that as a
+  statement about the bytes this package sends and nothing else; it is not a
+  claim about how the gateway holds any of the three at its end.
+- **Three controls act on those fields and they do not cover the same set.**
+  Read each for its own threat model rather than inferring one from another.
+  `\SensitiveParameterValue` wraps `password` alone, and `#[\SensitiveParameter]`
+  marks the constructor's `$password` alone — the "credential" in the first
+  bullet of this section is the secret one, not the identifiers. `__debugInfo()`
+  and `__serialize()` redact `password` alone as well, so a `var_dump()` or
+  `serialize()` of a `Credentials` prints `clientId` and `username` in full:
+  those two mechanisms line up exactly, on one field. The `Redactor` does not,
+  and must not — it replaces **all three** wholesale in every PSR-3 record,
+  `ClientID` and `Username` included, under its `client id` and `username`
+  rules. A log is a durable artifact read by parties the merchant did not
+  choose and correlated over time; an in-process dump is a developer looking at
+  configuration they already hold. "Not a secret" licenses leaving an identifier
+  unwrapped in memory; it never licenses writing one to a log.
 - A `Redactor` runs on every PSR-3 log record: it masks `Password` and
   truncates `CardNumber` to first-6/last-4 even though the API already masks
   it. The gateway's own masked form is twelve characters — first-6, two mask
@@ -1101,13 +1156,44 @@ otherwise carries none.
 
 ## 13. Known limits and unverified behaviour
 
-This section is the reference that every `@todo unverified` marker in `src/`
-points at. It records what the sandbox never confirmed, and — for each item —
+This section is the reference that every `@todo` marker in `src/` points at, of
+either kind. It records what the sandbox never confirmed, and — for each item —
 what the package does in the absence of confirmation and why.
 
 Read it as a statement about the evidence, not as a list of defects in the
 package. Several entries describe behaviour that is very probably fine and has
 simply never been put to the gateway.
+
+**Two markers point here, and which one a piece of code carries is not a matter
+of taste.** Both name `CONVENTIONS.md` — this file, which is tracked and ships
+in the distribution — because a marker in `src/` has to resolve for the consumer
+who reads it, and only a shipped document does (§7).
+
+**`@todo unverified — see CONVENTIONS.md §13`** — *we do not know what the
+gateway does.* The code rests on a declared type, a PDF claim or an inference
+that no observation has ever confirmed. It waits on an **observation of the
+behaviour itself**, and that observation discharges it in one step: make the
+call, read the answer, strike the entry here, remove the marker. That the
+observation is currently impossible does not change the kind — a binding
+endpoint the sandbox client may not call is unverified, not deferred, because
+what is missing is still a sighting of the behaviour.
+
+**`@todo deferred — see CONVENTIONS.md §13`** — *we know what the gateway does
+and have deliberately chosen not to act on it, because the evidence needed to
+act correctly cannot be obtained yet.* The behaviour is observed; what is
+missing is one **further** observation that would tell a correct response from a
+wrong one. It waits on a **decision**, and discharging it takes two steps rather
+than one: make the observation the marker names, then take the decision it
+enables and change the code — or re-affirm the deferral in writing, with the new
+reason. **A `deferred` marker must name the observation that would settle it.**
+One that does not is not a deferral but an unexplained to-do, and should not
+have been written as either marker. `unverified` carries no such requirement,
+because the observation it waits on is the behaviour itself and naming it would
+only restate the entry.
+
+To classify a new marker, ask what would make it removable. "Seeing the gateway
+do the thing" is `unverified`. "Seeing something *else*, so that we can finally
+choose what to do about a thing we have already seen" is `deferred`.
 
 - **Armenian text does not survive `Description` → `TrxnDescription`, and the
   question is with the bank.** L1 sent an Armenian `Description`; L3 and the
@@ -1417,7 +1503,8 @@ simply never been put to the gateway.
   observed — this section's own entry records that the endpoint has never been
   called.
 
-Code written against any behaviour in this section carries an
-`@todo unverified` marker naming §13. If an entry here is ever settled — by the
-bank, or by a probe against a working sandbox — strike the entry and remove the
-markers that point at it.
+Both markers are defined once, in this section's preamble, and are deliberately
+not restated here. A rule written down twice drifts, and a drifted copy reads as
+authoritative — the failure §7 records for the `src/` inventory and the manifest
+path. If you have arrived at this line looking for the rule, it is at the top of
+§13.

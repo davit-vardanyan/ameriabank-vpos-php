@@ -31,6 +31,20 @@ use SensitiveParameterValue;
  * The credentials are injected by the transport and never appear in a request
  * DTO the caller constructs (CONVENTIONS.md §5).
  *
+ * Only the password is wrapped, and the asymmetry is deliberate rather than an
+ * oversight (CONVENTIONS.md §6). It is the secret; ClientID and Username are
+ * identifiers. Both identifiers cross the wire in cleartext, in the request
+ * body, on every call that carries them — api-surface.json declares Username
+ * and Password on all twelve of its request models and ClientID on eight of
+ * them, and none of the three appears in any response model — and neither
+ * authenticates anything on its own, so wrapping them would advertise a
+ * protection the protocol does not provide and cannot. That is a statement
+ * about what this package sends, not about how the gateway holds anything at
+ * its end. __debugInfo() and __serialize() draw the same line: they redact the
+ * password and return both identifiers in full. The log redactor deliberately
+ * does not — it replaces all three, because a log is a durable artifact read by
+ * parties the merchant did not choose.
+ *
  * Leak channels. Each was executed against an instance holding a distinctive
  * password on PHP 8.3.28, and each line below records what that run printed,
  * not what the language is expected to do:

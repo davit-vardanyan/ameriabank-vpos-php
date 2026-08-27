@@ -101,7 +101,17 @@ use function strtolower;
 #[UsesClass(VposCallback::class)]
 final class VerifiedCallbackTest extends TestCase
 {
-    private const string CLIENT_ID = '000000';
+    /**
+     * The illustrative all-zero GUID CONVENTIONS.md §5 now shows, replacing the
+     * six-digit `'000000'` this constant copied from that example before it was
+     * corrected. Never reaches the wire here: verify() sends GetPaymentDetails,
+     * whose request model carries no ClientID — which the body assertion in
+     * testVerifyReachesGetPaymentDetailsWithTheCallbacksPaymentId pins by
+     * equality against exactly `Password`, `PaymentID` and `Username`, so this
+     * constant reaching a request body would fail that test rather than pass
+     * silently.
+     */
+    private const string CLIENT_ID = '00000000-0000-0000-0000-000000000000';
 
     private const string USERNAME = 'placeholder-user';
 

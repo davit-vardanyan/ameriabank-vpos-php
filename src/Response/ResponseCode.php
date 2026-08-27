@@ -180,6 +180,8 @@ final readonly class ResponseCode
      * HTTP status carries no business meaning here — the gateway answers 200
      * for a rejected credential (CONVENTIONS.md §4.1) — so the code is the
      * only signal.
+     *
+     * @todo deferred — see CONVENTIONS.md §13 (deferred, not unverified: string `"20"` has been observed carrying both meanings, so what is missing is not a sighting of the behaviour but the one observation named above — a wrong password against GetBindings, once the sandbox client has binding permissions — that would let this method be changed correctly)
      */
     public function isAuthenticationFailure(): bool
     {

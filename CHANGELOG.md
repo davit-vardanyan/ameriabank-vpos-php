@@ -514,7 +514,68 @@ and this project adheres to
   keeps 13 to 19, because that is where the original arithmetic applies. A value
   that arrived masked now round-trips byte-identical.
 
+- CONVENTIONS.md §6 now records why only `password` is wrapped in
+  `\SensitiveParameterValue` while `clientId` and `username` are held in
+  cleartext, and `Credentials`' own docblock carries the compressed form. The
+  asymmetry was already the code's behaviour and read as an oversight: a reader
+  seeing one field of three protected has no way to tell a deliberate boundary
+  from a missed one. The identifiers cross the wire in the request body by
+  design and neither authenticates anything on its own, so wrapping them would
+  advertise a protection the protocol does not provide. The evidence is
+  `api-surface.json` rather than prose — across its twelve request models
+  `Username` and `Password` are declared on all twelve and `ClientID` on eight,
+  which is seven of the eleven operations this package ships. `ClientID` is
+  therefore **not** carried on every request: the four models that omit it are
+  `PaymentDetailsRequest`, `ConfirmPaymentRequest`, `CancelPaymentRequest` and
+  `RefundPaymentRequest`, the operations keyed on a `PaymentID`, which is why
+  `Credentials` exposes `merchantFields()` and `userFields()` rather than one
+  array. None of the three names appears in any response model.
+- The same §6 passage now states that the three controls acting on those fields
+  do not cover the same set, because inferring one from another gets it wrong in
+  the dangerous direction. `\SensitiveParameterValue` and
+  `#[\SensitiveParameter]` cover `password` alone, and `__debugInfo()` and
+  `__serialize()` redact `password` alone — so a `var_dump()` of a `Credentials`
+  prints the two identifiers in full. The `Redactor` does not, and must not: it
+  replaces all three wholesale in every PSR-3 record. "Not a secret" licenses
+  leaving an identifier unwrapped in memory; it never licenses writing one to a
+  log, and without this stated §6 read as though it did.
+- CONVENTIONS.md §13 now defines **two** markers instead of one, and the
+  distinction is operational rather than decorative.
+  `@todo unverified — see CONVENTIONS.md §13` means the gateway's behaviour has
+  never been observed; it waits on a sighting and one observation discharges it.
+  `@todo deferred — see CONVENTIONS.md §13` means the behaviour **is** observed
+  and the package has deliberately not acted, because the further evidence
+  needed to act correctly cannot be obtained yet; it waits on a decision, takes
+  two steps to discharge, and **must name the observation that would settle
+  it**. That a required observation is currently impossible does not make a
+  marker deferred — most markers in `src/` sit behind sandbox entitlements the
+  client does not have and are still `unverified`, because what is missing is
+  the sighting itself. `ResponseCode::isAuthenticationFailure()` carries the
+  tree's first `deferred` marker, naming a wrong password against `GetBindings`
+  as the observation that would settle it. Its behaviour is unchanged: only
+  integer `20` is an authentication failure, and string `"20"` still reaches the
+  caller as a plain `ApiException`. The former closing instruction in §13 was
+  replaced by a pointer to the definition rather than left beside it, since a
+  rule written down twice drifts and the drifted copy reads as authoritative.
+- The `ClientID` example in CONVENTIONS.md §5 and in `Vpos`' docblock is now
+  `00000000-0000-0000-0000-000000000000` rather than `'000000'`. The six-digit
+  form does not resemble any real value and invited a reader to infer a length
+  or numeric constraint that does not exist. The replacement deliberately does
+  **not** come with a format claim in the other direction: one sandbox merchant
+  is not a specification, and `api-surface.json` types the field `string` with
+  no shape, so the surrounding prose says explicitly that the example is not a
+  rule.
+
 ### Fixed
+
+- The README's credential snippet read `getenv('VPOS_CLIENT_ID')` while
+  `.env.example` declares `AMERIA_CLIENT_ID`, and every other variable it
+  declares under the same `AMERIA_` prefix. A reader who set up their
+  environment from `.env.example` and then copied the README received three
+  empty strings and a `ConfigurationException` at construction. The README now
+  reads the `AMERIA_` names. Nothing in `src/` reads an environment variable at
+  all — the consumer constructs `Credentials` — so neither prefix was ever
+  load-bearing; the two documents simply disagreed.
 
 - The README told merchants to verify a payment by comparing
   `depositedAmountRaw` against the amount they charged. `DepositedAmount` is the

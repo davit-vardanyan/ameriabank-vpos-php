@@ -170,9 +170,9 @@ use DavitVardanyan\AmeriabankVpos\Vpos;
 
 $vpos = new Vpos(
     credentials: new Credentials(
-        clientId: (string) getenv('VPOS_CLIENT_ID'),
-        username: (string) getenv('VPOS_USERNAME'),
-        password: (string) getenv('VPOS_PASSWORD'),
+        clientId: (string) getenv('AMERIA_CLIENT_ID'),
+        username: (string) getenv('AMERIA_USERNAME'),
+        password: (string) getenv('AMERIA_PASSWORD'),
     ),
     environment: Environment::Test,
 );

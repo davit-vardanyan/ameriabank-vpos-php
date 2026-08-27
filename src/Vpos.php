@@ -31,7 +31,11 @@ use function trim;
  *
  * ```php
  * $vpos = new Vpos(
- *     credentials: new Credentials('000000', 'placeholder-user', 'placeholder-pass'),
+ *     credentials: new Credentials(
+ *         clientId: '00000000-0000-0000-0000-000000000000',
+ *         username: 'placeholder-user',
+ *         password: 'placeholder-pass',
+ *     ),
  *     environment: Environment::Test,
  * );
  *
@@ -61,6 +65,13 @@ use function trim;
  * `ClientID`, `Username` and `Password` are supplied once, here, and injected by
  * the transport at dispatch (CONVENTIONS.md §5). No request DTO a caller
  * constructs carries them, and the transport rejects a request body that does.
+ * `Username` and `Password` go on all twelve request models; `ClientID` goes on
+ * eight of them, so it is not a field that travels on every request.
+ *
+ * The `ClientID` in the example above is an illustrative all-zero GUID and not a
+ * format claim — `api-surface.json` types the field `string` and declares
+ * nothing about its shape, so use whatever the bank issued rather than
+ * validating against any shape (CONVENTIONS.md §5).
  *
  * ## No mutable state
  *
