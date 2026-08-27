@@ -566,6 +566,26 @@ and this project adheres to
   no shape, so the surrounding prose says explicitly that the example is not a
   rule.
 
+- **`psr/http-factory` now requires `^1.1`, raised from `^1.0`.** This is the
+  only runtime constraint that moved and it is the one a consumer feels. The
+  package types against that dependency's `RequestFactoryInterface` and
+  `StreamFactoryInterface`, and 1.0.2 declares `createUploadedFile()` with
+  implicitly nullable parameters, which PHP 8.4 deprecated. A consumer
+  installing at the old floor on PHP 8.4 or 8.5 — both inside this package's
+  declared `php: ^8.3` — got three deprecation notices in their own log,
+  attributable to a constraint this package chose. 1.1.0 requires only
+  `php >=7.1`, so this does not move the PHP floor.
+
+  The development floors moved with it for the same reason: `nyholm/psr7`
+  `^1.8`→`^1.8.2`, `php-http/mock-client` `^1.6`→`^1.6.1`, and `php-http/httplug`
+  added at `^2.4.1` to pin a transitive dependency. Between them the four
+  accounted for eleven deprecations under PHP 8.4+.
+
+  The cost is recorded rather than hidden: for all four, the first
+  deprecation-clean release is also the current latest, so the `--prefer-lowest`
+  CI job no longer discriminates for them. It still does for the rest — thirteen
+  of nineteen direct packages resolved below current when this was measured.
+
 ### Fixed
 
 - The README's credential snippet read `getenv('VPOS_CLIENT_ID')` while
@@ -597,6 +617,30 @@ and this project adheres to
   codepoint count and ASCII prefix preserved. Armenian only, `Description` →
   `TrxnDescription` only, test environment. A non-ASCII `Description` is
   therefore not a reconciliation key (CONVENTIONS.md §4.15, §13).
+
+- **The test suite pinned exception argument rendering, after CI failed on all
+  six matrix jobs with thirteen identical failures.** The cause was an INI
+  difference rather than a defect: GitHub's runner uses `php.ini-production`,
+  which sets `zend.exception_ignore_args=On` and
+  `zend.exception_string_param_max_len=0`. Both matter, and the first does most
+  of the damage — with arguments omitted from every captured frame, twelve
+  guards that read the raw trace array broke, and the thirteenth broke on the
+  rendered form.
+
+  All thirteen were guards asserting that a leak *would* have been visible, and
+  under that configuration it would not have been: with arguments suppressed,
+  deleting `Support/ExceptionState` outright left every substantive assertion in
+  `ExceptionSerializationTest` green. The guards were working. `phpunit.xml.dist`
+  now pins both directives, so a contributor running under a production INI gets
+  the same result as CI; no guard was weakened, skipped or relaxed.
+
+  A new suite-wide guard covers the quieter half of the same problem: a canary
+  longer than the configured limit is truncated out of a trace, and its absence
+  assertion then passes because of the truncation rather than because the value
+  was withheld. It derives its subjects from the test tree and reads the limit
+  through `ini_get()`, so neither can drift out of step. It replaces a
+  hand-maintained three-constant check against a hardcoded `15` and corrects that
+  check's measure — the engine truncates bytes, not codepoints.
 
 ### Security
 

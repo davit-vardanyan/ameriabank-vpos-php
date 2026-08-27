@@ -924,6 +924,17 @@ than escaping as a third-party discovery error.
 Guzzle is a development and `suggest` dependency only, never a `require`. So
 are `ext-soap` and `symfony/serializer`; see §8.
 
+`psr/http-factory` is required at `^1.1`, not `^1.0`, and the reason is about
+your logs rather than ours. This package types against that package's
+`RequestFactoryInterface` and `StreamFactoryInterface`, and 1.0.2 declares
+`createUploadedFile()` with implicitly nullable parameters — which PHP 8.4
+deprecated. Installed at the older floor on PHP 8.4 or later, those notices
+surface in the consuming application, attributable to a constraint this package
+chose. `require.php` is `^8.3` and that range includes 8.4 and 8.5, so a floor
+resolving to a version that is not clean on those versions is a wrong floor.
+1.1.0 itself requires only `php >=7.1`, so the raise does not move this
+package's own PHP floor.
+
 ### Rules
 
 - All classes are `final`, with one exception: `ApiException` is non-final
