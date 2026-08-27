@@ -297,7 +297,7 @@ final class ResponseHydratorTest extends TestCase
      */
     public function testAnUnknownWireKeyIsIgnoredAndReachesNoProperty(): void
     {
-        $canary = 'unknown-field-canary-9e1f';
+        $canary = 'uf-canary-9e1f';
 
         $response = ResponseHydrator::paymentDetailsResponse($this->paymentDetailsWith([
             'OrderID' => '1234',

@@ -74,6 +74,12 @@ final class FailureRedactorTest extends TestCase
      * Two header canaries, both nine characters, for the two shapes a consumer's
      * PSR-18 stack adds: one the redactor's key set would catch by name, one it
      * would not. Neither is a credential of any kind.
+     *
+     * The length is not decoration. A canary longer than
+     * `zend.exception_string_param_max_len` is truncated out of a rendered
+     * trace, and every assertion that it is absent then passes for the wrong
+     * reason. TraceCanaryLengthTest enforces that across the whole suite,
+     * against the limit phpunit.xml.dist pins, so it is not restated here.
      */
     private const string PROXY_CANARY = 'px-canary';
 
@@ -87,13 +93,6 @@ final class FailureRedactorTest extends TestCase
     {
         $this->psr17 = new Psr17Factory();
         $this->redactor = new FailureRedactor(new Redactor(), $this->psr17);
-    }
-
-    public function testTheCanaryIsShortEnoughToSurviveATraceTruncation(): void
-    {
-        self::assertLessThan(15, mb_strlen(self::PASSWORD));
-        self::assertLessThan(15, mb_strlen(self::PROXY_CANARY));
-        self::assertLessThan(15, mb_strlen(self::HEADER_CANARY));
     }
 
     /**

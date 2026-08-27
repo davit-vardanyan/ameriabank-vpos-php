@@ -11,6 +11,41 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutCoverageMetadata="true"
          requireCoverageMetadata="true">
+    <!--
+        The suite runs with exception arguments rendered, deliberately.
+
+        Several tests prove that #[\SensitiveParameter] stops a password
+        reaching a stack trace. That protection only matters when arguments ARE
+        rendered, so the suite must run under the configuration where the leak
+        is possible. Under an INI that suppresses arguments those tests assert
+        the absence of something that was never going to be printed, which
+        proves nothing — and that is exactly what the task 008 guard detected
+        when GitHub's runner, which uses php.ini-production, turned all 13 of
+        them red.
+
+        php.ini-production sets zend.exception_ignore_args=On and
+        zend.exception_string_param_max_len=0; php.ini-development sets Off and
+        15. Both are PHP_INI_ALL, so PHPUnit applies these after startup and
+        they take precedence over a -d flag on the command line. Pinning them
+        here rather than in ci.yml is what makes a contributor running locally
+        under a production INI get the same result as CI.
+
+        The value 15 is php.ini-development's own default, and the suite
+        deliberately matches it rather than exceeding it, so a developer sees
+        the same behaviour ambiently as CI does. It is not a free choice in the
+        other direction either: -1 is not accepted for this directive and
+        silently falls back to 15, and the accepted range is 0..1000000.
+
+        A string argument of more than this many BYTES is truncated, which would
+        let a leak-detection assertion pass because the canary was cut short
+        rather than because it was withheld. tests/TraceCanaryLengthTest.php
+        holds every canary in the suite to this limit, reading the value back
+        through ini_get() rather than restating the number.
+    -->
+    <php>
+        <ini name="zend.exception_ignore_args" value="0"/>
+        <ini name="zend.exception_string_param_max_len" value="15"/>
+    </php>
     <testsuites>
         <testsuite name="unit">
             <directory>tests</directory>
