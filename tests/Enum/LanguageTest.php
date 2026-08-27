@@ -16,11 +16,13 @@ use function sprintf;
  * {base}Payments/Pay, so its members come from the vendor PDF, which
  * CONVENTIONS.md §2 ranks non-authoritative.
  *
- * The payment page renders now — probe cases P1 through P6 completed a payment
- * through it — but which `lang` value that run used was not recorded, so none of
- * these three spellings has been shown to be accepted (§13). What is pinned here
- * is therefore still only the spelling that goes into a URL, and a wrong
- * spelling there is a payment page the customer cannot read.
+ * The payment page renders now, and one of the three spellings is exercised:
+ * case L2 opened it at a URL carrying `lang=en`, the form rendered and a card
+ * was charged (CONVENTIONS.md §4.24). Read that narrowly — what the page
+ * rendered *in* was not recorded, so `lang=en` is observed harmless rather than
+ * observed to select English, and `am` and `ru` have never been sent (§13).
+ * What is pinned here is therefore still only the spelling that goes into a
+ * URL, and a wrong spelling there is a payment page the customer cannot read.
  */
 #[CoversClass(Language::class)]
 final class LanguageTest extends TestCase

@@ -286,10 +286,13 @@ final class VerifiedCallbackTest extends TestCase
      * asserting it here is something PHPStan resolves at analysis time rather
      * than a check that could ever run.
      *
-     * What it cannot pin is the gateway's side. Whether Ameriabank accepts the
-     * lowercase form is unobserved — every `GetPaymentDetails` on record sent
-     * the uppercase one (P3, P4.1b, P4.3b, P6) — and a mock client cannot answer
-     * that question. See CONVENTIONS.md §13.
+     * What it cannot pin is the gateway's side. That Ameriabank accepts the
+     * lowercase form is no longer unobserved: case L3 sent a callback's
+     * lowercase PaymentID to `GetPaymentDetails` for a payment InitPayment had
+     * issued in uppercase, and the gateway answered `ResponseCode` `"00"` with
+     * the correct payment's body. But a mock client could not have established
+     * that and does not establish it here — this test pins the pass-through and
+     * nothing about the far end. See CONVENTIONS.md §4.12.
      */
     public function testVerifySendsThePaymentIdInTheCaseTheCallbackUsedIt(): void
     {

@@ -26,20 +26,21 @@ use DavitVardanyan\AmeriabankVpos\Support\ResponseHydrator;
  * manifest states no requiredness — "Additional information" reads "None." for
  * every field of every model.
  *
- * Observed once, on probe case P5: a cancel against a payment that had already
- * been partially refunded, answering HTTP 200 with `ResponseCode` `"07"`,
- * `ResponseMessage` `Reversal is impossible for current transaction state`, and
- * the `Opaque` from InitPayment. All three declared fields arrived, matching the
- * manifest. A cancel that *succeeds* has still not been seen — the one payment
- * available to cancel had been refunded first, which is the state that refusal
- * names.
+ * Observed twice, on probe case P5 and on case L5.2, the second of them
+ * serialised and hydrated by this package: each was a cancel against a payment
+ * that had already been partially refunded, and each answered HTTP 200 with
+ * `ResponseCode` `"07"`, `ResponseMessage` `Reversal is impossible for current
+ * transaction state`, and the `Opaque` from InitPayment. All three declared
+ * fields arrived on both, matching the manifest. A cancel that *succeeds* has
+ * still not been seen: both payments available to cancel had been refunded
+ * first, which is the state that refusal names.
  */
 final readonly class CancelPaymentResponse
 {
     /**
-     * @param ResponseCode $responseCode    Wire key `ResponseCode`. String on this endpoint; "00" is the documented success value, and probe case P5 observed the refusal `"07"` here.
-     * @param string       $responseMessage Wire key `ResponseMessage`. The gateway's own text; observed carrying the reason a cancel was refused (P5). No success word has been seen on this endpoint, and the two that have been seen elsewhere differ — `OK` from InitPayment, `Success` from RefundPayment — so nothing may be matched on it.
-     * @param string|null  $opaque          Wire key `Opaque`. Echoed back from InitPayment, on a refusal as much as on a success (P5).
+     * @param ResponseCode $responseCode    Wire key `ResponseCode`. String on this endpoint; "00" is the documented success value, and probe cases P5 and L5.2 both observed the refusal `"07"` here.
+     * @param string       $responseMessage Wire key `ResponseMessage`. The gateway's own text; observed carrying the reason a cancel was refused, with the same text on both observations (P5, L5.2). No success word has been seen on this endpoint, and the two that have been seen elsewhere differ — `OK` from InitPayment, `Success` from RefundPayment — so nothing may be matched on it.
+     * @param string|null  $opaque          Wire key `Opaque`. Echoed back from InitPayment, on a refusal as much as on a success (P5, L5.2).
      */
     public function __construct(
         public ResponseCode $responseCode,

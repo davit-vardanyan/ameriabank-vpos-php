@@ -283,21 +283,33 @@ final readonly class Vpos
      * messages also let a merchant reading a log tell a gateway quirk from a
      * replay attempt; one message covering both would distinguish neither.
      *
-     * ## The one request this method makes has never been made
+     * ## The one request this method makes, and the case question it answered
      *
      * It sends `$callback->paymentId()` — the identifier as the *callback*
-     * spelled it. The gateway does not spell it the same way in both channels:
-     * InitPayment answered probe case P1 with an uppercase GUID and the BackURL
-     * of P2 echoed the identical identifier in lowercase. Nothing is normalised
-     * here, per CONVENTIONS.md §4.8, so what the callback said is what goes back.
+     * spelled it. The gateway does not spell it the same way in every channel:
+     * InitPayment answers with an uppercase GUID (P1, L1), the BackURL echoes
+     * the identical identifier in lowercase (P2, L2), and GetPaymentId answers
+     * lowercase as well (L6.1). Nothing is normalised here, per
+     * CONVENTIONS.md §4.8, so what the callback said is what goes back.
      *
-     * Every `GetPaymentDetails` call on record — P3, P4.1b, P4.3b, P6 — sent the
-     * uppercase form, taken from the InitPayment response rather than from a
-     * callback. So the gateway accepting the *lowercase* form is not established,
-     * and it is the only request this method ever makes. Settling it takes one
-     * probe. Until then a caller who wants certainty can pass the uppercase
-     * PaymentID it stored at init time to `payments()->details()` and compare the
-     * order itself, which is the check this method performs anyway.
+     * That was this method's one unverified step, and it is no longer one. Every
+     * `GetPaymentDetails` call on record before it — P3, P4.1b, P4.3b, P6 — had
+     * sent the uppercase form, taken from an InitPayment response rather than
+     * from a callback, so whether the gateway accepts the lowercase form was
+     * unestablished while being the only request this method ever makes. Case L3
+     * made exactly that request: it sent the callback's **lowercase** PaymentID
+     * for a payment InitPayment had issued in **uppercase**, and the gateway
+     * answered HTTP 200, the success code `"00"` and the correct payment's fully
+     * populated body, carrying the same OrderID the callback had. The gateway
+     * therefore accepts the lowercase form on this identifier, and the exposure
+     * is closed. See CONVENTIONS.md §4.12.
+     *
+     * Read that reach exactly: one payment, one sandbox client, test
+     * environment. It establishes that the lowercase form is accepted here — not
+     * that the gateway folds case, which would be a mechanism rather than an
+     * observation. Only the two forms the gateway itself issues have ever been
+     * sent; a mixed-case PaymentID never has. And it says nothing about the case
+     * handling of any other identifier.
      *
      * ## One entry point, and it takes the type
      *
@@ -334,8 +346,6 @@ final readonly class Vpos
      * @throws ValidationException     when the response's OrderID differs from the callback's, or is present but blank
      * @throws GatewayFaultException   when the gateway answers the fault envelope instead of a response code
      * @throws VposExceptionInterface  on any other failure of the details round trip
-     *
-     * @todo unverified — see CONVENTIONS.md §13 (this method's own request has never been made: it sends the callback's lowercase PaymentID, and every GetPaymentDetails call on record sent the uppercase form)
      */
     public function verify(VposCallback $callback): PaymentDetailsResponse
     {

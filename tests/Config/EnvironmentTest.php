@@ -140,9 +140,15 @@ final class EnvironmentTest extends TestCase
     /**
      * The payment page URL, in full, for each of the three languages.
      *
-     * `lang` is not optional decoration. It is what decides which language the
-     * customer is asked to pay in, and dropping it produces a URL that still
-     * resolves — so nothing but this assertion would report its loss.
+     * `lang` is not optional decoration, and the reason is narrower than it
+     * looks. What the page renders *in* has never been recorded: case L2 opened
+     * it at `lang=en`, the card form rendered and a card was charged, so that
+     * spelling is confirmed **harmless** rather than confirmed to have selected
+     * English, and `am` and `ru` have never been sent at all (CONVENTIONS.md
+     * §13). What makes the parameter load-bearing here is the published shape —
+     * §4.13 publishes the page as `Pay?id=…&lang={am|ru|en}` — and the fact that
+     * dropping it produces a URL that still resolves, so nothing but this
+     * assertion would report its loss.
      */
     #[DataProvider('paymentPageLanguages')]
     public function testThePaymentPageUrlCarriesTheIdAndTheLanguage(Language $language, string $expected): void

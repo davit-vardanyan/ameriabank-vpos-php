@@ -24,8 +24,9 @@ use DavitVardanyan\AmeriabankVpos\Money\Amount;
  * — an Amount in one currency carried alongside a `Currency` field naming
  * another is a money bug with no detectable symptom. It is therefore always
  * emitted rather than left to the server default described in CONVENTIONS.md
- * §4.12: "051" was accepted in 24 probe requests that returned ResponseCode 1,
- * so stating it is at least as well evidenced as omitting it, and it keeps the
+ * §4.12: every request this project has ever sent that carried a currency at
+ * all carried "051" and every success-coded one of them was accepted, so
+ * stating it is at least as well evidenced as omitting it, and it keeps the
  * serialised body a pure function of the object — which §4.4 requires, since
  * InitPayment may only be retried with a byte-identical body.
  *
@@ -141,11 +142,20 @@ final readonly class InitPaymentRequest implements RequestInterface
      * sent as null.
      *
      * Key order follows the manifest's field order. Amount is a decimal string
-     * because no IEEE 754 value may reach the wire (CONVENTIONS.md §4.7). That
-     * rule is still unexercised against this gateway, and the run that completed
-     * the first live payment did not exercise it: probe case P1 was hand-built
-     * and sent `"Amount": 10` as a JSON integer. The bytes this method emits have
-     * never been sent to Ameriabank.
+     * because no IEEE 754 value may reach the wire (CONVENTIONS.md §4.7).
+     *
+     * The bytes this method emits have now been sent to Ameriabank and were
+     * accepted. This docblock used to say the opposite, and correctly: probe
+     * case P1, the first live payment, was hand-built and sent `"Amount": 10` as
+     * a JSON integer, so nothing this method serialised had ever reached the
+     * gateway. Case L1 changed that — this method produced `"Amount":"10.00"`,
+     * a quoted decimal confirmed in hex on the captured request body, and the
+     * gateway answered `ResponseCode` 1, `"OK"`. `OrderID` went beside it as a
+     * bare JSON integer, so the mixed encoding is accepted exactly as it stands.
+     *
+     * That settles the encoding and not the precision: every fraction sent was
+     * `.00`, no fractional amount has ever reached the gateway, and §13's
+     * amount-precision entry is untouched by it.
      *
      * `Description` is written here and read back from a different key. See the
      * constructor's docblock.

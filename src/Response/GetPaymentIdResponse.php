@@ -17,7 +17,8 @@ use DavitVardanyan\AmeriabankVpos\Support\ResponseHydrator;
  * convention.** The payment identifier arrives as `PaymentId` here — lowercase
  * `d` — where every other model spells it `PaymentID`. The manifest's own JSON
  * sample for this endpoint confirms it: `{ "PaymentId": ..., "ResponseMessage":
- * ..., "ResponseCode": ... }`. The other break is `OrderId` on
+ * ..., "ResponseCode": ... }`, and so does the wire, on case L6.1. The other
+ * break is `OrderId` on
  * GetPendingTransactionsResponse. CONVENTIONS.md §4.8 forbids normalising
  * either; hydrating this model with the key `PaymentID` would silently yield
  * null, and a null PaymentID is indistinguishable here from an order the
@@ -31,13 +32,34 @@ use DavitVardanyan\AmeriabankVpos\Support\ResponseHydrator;
  * manifest states no requiredness — "Additional information" reads "None." for
  * every field of every model.
  *
- * @todo unverified — see CONVENTIONS.md §13 (no GetPaymentId probe has ever run)
+ * ## The success shape is observed now
+ *
+ * This model carried an unverified marker naming CONVENTIONS.md §13, on the
+ * grounds that the endpoint had never been called. It has been called, so the
+ * marker is gone rather than reworded. Case L6.1 asked for the
+ * `PaymentID` of an order this package had registered, and the gateway answered
+ * HTTP 200, `ResponseCode` `"00"`, `"ResponseMessage":""` and a `PaymentId`.
+ * Three details of that body each turn a claim above from manifest-sourced into
+ * observed:
+ *
+ * - The key really is `PaymentId`, lowercase `d`. CONVENTIONS.md §4.8's row for
+ *   it is wire-confirmed rather than sample-confirmed.
+ * - The identifier came back **lowercase**, siding with the BackURL callback
+ *   rather than with InitPayment, which returns the same GUID uppercase. That is
+ *   the third case channel CONVENTIONS.md §4.12 records, and this package
+ *   normalises none of the three.
+ * - `ResponseMessage` was the **empty string** on a call that succeeded — a
+ *   third endpoint giving a third answer (CONVENTIONS.md §4.17). Do not read an
+ *   empty message as a failure, and do not match a word on this field.
+ *
+ * One shape is still unseen: what the gateway answers for an `OrderID` it does
+ * not know. Nothing here assumes one, which is why `paymentId` stays nullable.
  */
 final readonly class GetPaymentIdResponse
 {
     /**
-     * @param string|null  $paymentId       Wire key `PaymentId` — lowercase `d`, on this model only. Not `PaymentID`.
-     * @param string       $responseMessage Wire key `ResponseMessage`. No success word is observed on this endpoint, and the two that are observed elsewhere differ — `OK` from InitPayment, `Success` from RefundPayment — so nothing may be matched on this text.
+     * @param string|null  $paymentId       Wire key `PaymentId` — lowercase `d`, on this model only. Not `PaymentID`. Returned lowercase on L6.1; nothing here normalises the case.
+     * @param string       $responseMessage Wire key `ResponseMessage`. Observed as the **empty string** on a call that succeeded (L6.1), and the two words observed elsewhere differ anyway — `OK` from InitPayment, `Success` from RefundPayment — so nothing may be matched on this text and an empty value may not be read as a failure.
      * @param ResponseCode $responseCode    Wire key `ResponseCode`. String on this endpoint.
      */
     public function __construct(

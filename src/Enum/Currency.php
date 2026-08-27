@@ -10,13 +10,18 @@ namespace DavitVardanyan\AmeriabankVpos\Enum;
  * The gateway carries this as a plain string, not a modelled enum, so the set of
  * members comes from the vendor PDF rather than the API surface manifest.
  *
- * Only AMD ("051") is confirmed accepted — it was sent in 24 requests that
- * returned `ResponseCode` 1, across probe phases A, B, C and the paypage run.
- * "840" (USD) was sent exactly once, in probe A7.4, and that request was
- * rejected with `ResponseCode` 560 by the sandbox's blanket 10-AMD amount
- * rule; it says nothing about currency handling. "978" (EUR) and "643" (RUB)
+ * Only AMD ("051") is confirmed accepted, and the evidence is a sweep rather
+ * than a count: every request this project has ever sent that carried a
+ * currency at all carried "051", save exactly one — across probe phases A, B
+ * and C, the payment-page run, and the run of CONVENTIONS.md §4.24, every
+ * success-coded request carried that value and no other. The one exception is
+ * probe A7.4, which carried "840" (USD) and was rejected with `ResponseCode`
+ * 560 by the sandbox's blanket 10-AMD amount rule; that rule fires on the
+ * amount and says nothing about currency handling. "978" (EUR) and "643" (RUB)
  * have never been sent at all. USD, EUR and RUB are therefore all
- * PDF-sourced and unverified.
+ * PDF-sourced and unverified. No count is given here on purpose: this docblock
+ * used to name one, and it read as the whole record as soon as another run
+ * added requests to it.
  *
  * No probe has ever sent an alpha code, so "numeric, not alpha" is an
  * inference, not an observation of a rejected alternative. It no longer rests on

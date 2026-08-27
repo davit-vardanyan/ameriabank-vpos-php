@@ -87,7 +87,12 @@ final readonly class ResponseCode
      * - string "00" — the success code for every endpoint other than
      *   InitPayment. No longer PDF-sourced: observed six times in the run that
      *   completed the first live payment — from GetPaymentDetails on probe cases
-     *   P3, P4.1b, P4.3b and P6, and from RefundPayment on P4.1 and P4.3.
+     *   P3, P4.1b, P4.3b and P6, and from RefundPayment on P4.1 and P4.3. Case
+     *   L6.1 adds a third endpoint: GetPaymentId answered "00" on a call that
+     *   succeeded and returned a PaymentId, with an empty ResponseMessage beside
+     *   it (CONVENTIONS.md §4.17). That supports the sentence above without
+     *   establishing it — most of the endpoints this package ships have still
+     *   never answered "00" at all.
      *
      * Every other value, known or unknown, is not success. Deliberately
      * fail-closed: reporting a failure as success is the one misclassification
@@ -111,30 +116,66 @@ final readonly class ResponseCode
     /**
      * True for integer 20 only.
      *
-     * Both wire forms of 20 have been observed, and they did not mean the same
-     * thing:
+     * **`AuthenticationException` is therefore currently unreachable outside
+     * InitPayment.** That is stated here, and in CONVENTIONS.md §13, because a
+     * reader must not have to discover it from behaviour. To detect a credential
+     * problem on any other operation, catch ApiException and read
+     * responseCode() and responseMessage(); the latter carries the gateway's own
+     * "Incorrect Username and Password". A credential rejection does not even
+     * always answer 20 — on GetPaymentDetails a wrong password produced `"550"`
+     * with no message at all (CONVENTIONS.md §4.25).
      *
-     * - integer 20 — InitPayment, ResponseMessage "Incorrect Username and
-     *   Password" (case A2). A credential rejection.
-     * - string "20" — ActivateBinding, DeactivateBinding and GetBindings,
-     *   ResponseMessage "Client payment type BindingMainRest is not available"
-     *   (cases A1.1, A1.3, B6.1 and B6.2). An entitlement refusal, returned in
-     *   runs whose credentials authenticated successfully elsewhere.
+     * ## Why the string form is not classified, and what falsified the old reason
      *
-     * So only the integer form is classified as an authentication failure. The
-     * string form falls through toException() to a plain ApiException, whose
-     * message carries the gateway's own ResponseMessage, so the entitlement
-     * text reaches the caller either way.
+     * Integer 20 has one observed meaning: a credential rejection from
+     * InitPayment, ResponseMessage "Incorrect Username and Password" (case A2).
+     * That is the form InitPayment returns, per CONVENTIONS.md §4.3.
      *
-     * The asymmetry decides the unobserved cases. Adding a classification later
-     * is not a breaking change, because everything built here extends
-     * ApiException and a caller catching ApiException keeps working. Removing
-     * one later is breaking, because a caller catching AuthenticationException
-     * silently stops catching. Classifying only what was observed is the
-     * reversible choice. The accepted cost is that an InitPayment
-     * authentication failure arriving as a string through the XML
-     * representation would degrade to ApiException — safe, merely less
-     * specific.
+     * This docblock used to justify the split by asserting that string `"20"`
+     * meant something else entirely — an entitlement refusal, nothing to do with
+     * credentials. **Live traffic falsified that.** String `"20"` is overloaded
+     * across at least two unrelated meanings:
+     *
+     * - an **entitlement refusal** from ActivateBinding, DeactivateBinding and
+     *   GetBindings, always with "Client payment type BindingMainRest is not
+     *   available" (cases A1.1, A1.3, A11.4, A11.5, B6.1, B6.2), returned in runs
+     *   whose credentials authenticated successfully elsewhere;
+     * - a **credential rejection** from GetPaymentId, with ResponseMessage
+     *   "Incorrect Username and Password" (case L6.2) — the same condition the
+     *   integer form reports, arriving as a string.
+     *
+     * So the string form is not a different condition; it is two conditions, one
+     * of which is exactly what this method is named for. The behaviour is
+     * deliberately unchanged anyway, for reasons that survive the correction:
+     *
+     * - **Discriminating by operation is rejected.** The operation is not what
+     *   distinguishes these two cases — it correlates with them across seven
+     *   observations, which is not the same thing. Nothing from the bank says a
+     *   binding endpoint cannot reject a credential, and because the sandbox
+     *   client has no binding entitlement, a wrong password against a binding
+     *   endpoint has never been observable at all. A by-operation rule would rest
+     *   on a set with one structurally unobservable cell and would misclassify
+     *   that cell the moment it became observable.
+     * - **Discriminating by ResponseMessage is rejected.** It is the
+     *   code-to-description table CONVENTIONS.md §4.17 forbids, wearing a
+     *   different hat.
+     * - **The current behaviour is the safe direction.** The string form falls
+     *   through toException() to a plain ApiException carrying the gateway's own
+     *   ResponseMessage, so a caller facing a credential rejection sees an
+     *   accurate message and loses only the specific type.
+     * - **The asymmetry still decides it, and now for a second reason.** Adding
+     *   a classification later is not a breaking change, because everything built
+     *   here extends ApiException and a caller catching ApiException keeps
+     *   working. Removing one later is breaking, because a caller catching
+     *   AuthenticationException silently stops catching. Classifying only what is
+     *   unambiguous is the reversible choice.
+     *
+     * The accepted cost is a real gap, not a tidy one: a credential rejection
+     * that arrives as string `"20"` degrades to ApiException. It is pinned by a
+     * test so that closing it fails the build until this concession is rewritten.
+     * The observation that would decide it is a **wrong password against
+     * GetBindings**, once the sandbox client has binding permissions; that single
+     * result settles the question. See CONVENTIONS.md §13.
      *
      * HTTP status carries no business meaning here — the gateway answers 200
      * for a rejected credential (CONVENTIONS.md §4.1) — so the code is the
@@ -151,10 +192,19 @@ final readonly class ResponseCode
      *
      * That is the intended answer, not an oversight. A value object whose whole
      * purpose is to preserve what arrived should not paper over the difference
-     * between the two wire types, and 20 is the case that proves the point: the
-     * two forms arrived from different endpoints carrying different
-     * ResponseMessages, and only the int one is an authentication failure (see
-     * isAuthenticationFailure()).
+     * between the two wire types — the type varies by endpoint and carries the
+     * endpoint's own convention with it (CONVENTIONS.md §4.3), and collapsing the
+     * two would discard that.
+     *
+     * 20 is no longer an illustration of the point, and must not be cited as one.
+     * This docblock used to argue that the two forms of 20 "arrived from different
+     * endpoints carrying different ResponseMessages"; live traffic falsified that,
+     * because string `"20"` has since arrived carrying the *same* "Incorrect
+     * Username and Password" as the integer form (case L6.2). The two forms of 20
+     * can mean the same thing, and only the integer one is classified — see
+     * isAuthenticationFailure() for why that gap is deliberate. So === here is
+     * right for the type-preservation reason above, and 20 is a case where it
+     * separates two values that meant one thing.
      */
     public function equals(self $other): bool
     {
@@ -167,8 +217,12 @@ final readonly class ResponseCode
      * Authentication failures become AuthenticationException; every other
      * failure becomes a plain ApiException carrying the raw code, the
      * operation, and the gateway's ResponseMessage. Only integer 20 is an
-     * authentication failure — see isAuthenticationFailure() for why string
-     * "20" is not.
+     * authentication failure, so AuthenticationException is currently
+     * unreachable outside InitPayment. String `"20"` is not classified even
+     * though it has been observed carrying a credential rejection of its own
+     * (case L6.2); it becomes an ApiException whose message carries the
+     * gateway's own text. See isAuthenticationFailure() for why that gap is
+     * deliberate, and CONVENTIONS.md §13 for the observation that would close it.
      *
      * A success code is a programming error at the call site rather than a
      * runtime condition, so it raises ConfigurationException instead of

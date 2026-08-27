@@ -216,10 +216,22 @@ final class HttpTransport
 
     /**
      * CONVENTIONS.md §4.7. JSON_UNESCAPED_UNICODE is load-bearing rather than
-     * cosmetic: Armenian Description values round-trip correctly and must not
-     * be escaped. JSON_PRESERVE_ZERO_FRACTION matters for the same reason a
-     * float must never reach the wire — it keeps a decimal that arrived as one
-     * from being re-rendered as an integer.
+     * cosmetic: the outgoing body has been captured carrying an Armenian
+     * Description as raw UTF-8, with no `\u` sequence anywhere in it, and the
+     * gateway accepted that request (case L1). The flag is what puts those
+     * bytes on the wire, and removing it changes what this package sends.
+     *
+     * It is not, however, a promise that the value survives the round trip, and
+     * the earlier claim here that Armenian Description values "round-trip
+     * correctly" was wrong. What was observed is narrower: Armenian text sent in
+     * `Description` returns from `TrxnDescription` with each non-Latin codepoint
+     * replaced by U+00BF; codepoint count and ASCII prefix are preserved. Scope
+     * it exactly — Armenian only, `Description` to `TrxnDescription` only, test
+     * environment. See CONVENTIONS.md §4.7 and §4.15.
+     *
+     * JSON_PRESERVE_ZERO_FRACTION matters for the same reason a float must never
+     * reach the wire — it keeps a decimal that arrived as one from being
+     * re-rendered as an integer.
      */
     private const int JSON_FLAGS = JSON_THROW_ON_ERROR
         | JSON_PRESERVE_ZERO_FRACTION

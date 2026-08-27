@@ -33,6 +33,12 @@ use DavitVardanyan\AmeriabankVpos\Support\ResponseHydrator;
  * with the country identified and the bank unnamed. Whether any payment ever
  * carries a bank name is unknown.
  *
+ * A second completed payment, on a second order, reproduced it: the object
+ * arrived present and populated on the run CONVENTIONS.md §4.24 records, with
+ * `BankName` still `""`. That corroborates the paragraph above rather than
+ * narrowing it — the empty string is still the only value this member has ever
+ * carried.
+ *
  * fromWireArray() below carries no mapping of its own: it delegates to the
  * hydrator under Support\, where every wire key in this package is spelled
  * exactly once, so that a mapping transcribed twice cannot drift — the failure

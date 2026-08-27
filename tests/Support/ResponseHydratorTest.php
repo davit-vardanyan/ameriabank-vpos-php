@@ -1700,10 +1700,19 @@ final class ResponseHydratorTest extends TestCase
      * Every declared field of GetPaymentDetails, each with a value that appears
      * nowhere else in the payload.
      *
-     * The Description is Armenian because CONVENTIONS.md §4.7 requires
-     * JSON_UNESCAPED_UNICODE for exactly that reason and §4.12 confirms the
-     * gateway round-trips it; a fixture in ASCII would never notice a hydrator
-     * that mangled it.
+     * The Description is Armenian because a fixture in ASCII would never notice
+     * a hydrator that mangled UTF-8 — that is the whole reason, and it is a
+     * statement about this package's own code rather than about the gateway.
+     *
+     * Two claims this docblock used to make are struck. It said §4.12 "confirms
+     * the gateway round-trips it": §4.12 says only that the **request** field
+     * Description *accepts* Armenian UTF-8 — acceptance, never round-trip — so
+     * the citation was wrong as well as the claim. And the round trip itself is
+     * falsified: Armenian text sent in Description returns from TrxnDescription
+     * with each non-Latin codepoint replaced by U+00BF, codepoint count and ASCII
+     * prefix preserved (CONVENTIONS.md §4.7, §4.15). Nothing here depends on
+     * that; the hydrator is handed bytes and must return them unchanged either
+     * way, which is what the assertions check.
      *
      * `DateTime` is written in the shape probe case P3 observed, `d/m/Y H:i:s`,
      * rather than the ISO string this fixture used to carry. The hydrator does

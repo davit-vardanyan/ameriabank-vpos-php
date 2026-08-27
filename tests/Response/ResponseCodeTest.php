@@ -88,7 +88,7 @@ final class ResponseCodeTest extends TestCase
             'int 0' => [0],
             'string "0"' => ['0'],
             'int 20 — credential rejection on InitPayment' => [20],
-            'string "20" — entitlement refusal from the binding endpoints' => ['20'],
+            'string "20" — overloaded: entitlement refusal, and one credential rejection' => ['20'],
             'int 560 — the sandbox amount rule' => [560],
             'string "0999" — observed on the BackURL callback' => ['0999'],
             'string "01"' => ['01'],
@@ -118,20 +118,30 @@ final class ResponseCodeTest extends TestCase
      * Every code that must not be read as an authentication failure.
      *
      * The first row is the boundary, and the only observed wire value in the
-     * set. String "20" occurs six times across the probe corpus and carries
-     * ResponseMessage "Client payment type BindingMainRest is not available"
-     * in all six — ActivateBinding and DeactivateBinding (cases A1.1 and A1.3)
-     * and GetBindings (cases A11.4, A11.5, B6.1 and B6.2), every one of them
-     * HTTP 200. That is an entitlement refusal.
+     * set. String "20" is **overloaded**, and the older reading of it recorded
+     * here — that all its occurrences were entitlement refusals, so the two wire
+     * forms were simply two different conditions — has been falsified by live
+     * traffic. Six occurrences are entitlement refusals, carrying
+     * ResponseMessage "Client payment type BindingMainRest is not available":
+     * ActivateBinding and DeactivateBinding (cases A1.1 and A1.3) and
+     * GetBindings (cases A11.4, A11.5, B6.1 and B6.2), every one of them
+     * HTTP 200. A seventh is not: GetPaymentId answered string "20" with
+     * "Incorrect Username and Password" (case L6.2) — the same credential
+     * rejection the integer form reports.
      *
-     * Int 20 occurs exactly once, and that occurrence is the deliberate
-     * bad-password probe — case A2, whose recorded question is "Bad password:
-     * does it 401/403 or 200 with ResponseCode 20?" — carrying "Incorrect
-     * Username and Password". None of the six binding calls was a
-     * bad-credential probe, and case A3 in the same phase answered
-     * ResponseCode 1, "OK". Two conditions, so one classification: re-adding
-     * `|| $this->raw === '20'` to isAuthenticationFailure() turns this
-     * provider's test red.
+     * Int 20 has one observed occurrence, the deliberate bad-password probe —
+     * case A2, whose recorded question is "Bad password: does it 401/403 or 200
+     * with ResponseCode 20?" — carrying "Incorrect Username and Password".
+     *
+     * So string "20" stays in this set as a **conceded gap**, not as a different
+     * condition: re-adding `|| $this->raw === '20'` to isAuthenticationFailure()
+     * turns this provider's test red, and that is deliberate. Why the gap is left
+     * open — the operation correlates with the two meanings across seven
+     * observations without explaining them, discriminating by ResponseMessage is
+     * the table CONVENTIONS.md §4.17 forbids, and adding a classification later
+     * is reversible where removing one is not — is set out in
+     * isAuthenticationFailure()'s docblock, in CONVENTIONS.md §13, and in
+     * testTheStringFormOfTwentyIsStillNotAnAuthenticationFailure() below.
      *
      * The remaining four resemble 20 without being it, each aimed at a
      * different wrong reading of the check, all four executed on PHP 8.3.28:
@@ -150,7 +160,7 @@ final class ResponseCodeTest extends TestCase
     public static function nonAuthenticationCodes(): array
     {
         return [
-            'string "20" — the entitlement refusal from ActivateBinding, DeactivateBinding, GetBindings' => ['20'],
+            'string "20" — overloaded across the binding endpoints and GetPaymentId' => ['20'],
             'string "020" — numerically equal to 20, textually not' => ['020'],
             'string "200"' => ['200'],
             'int 2' => [2],
@@ -173,7 +183,7 @@ final class ResponseCodeTest extends TestCase
     public static function plainApiFailures(): array
     {
         return [
-            'string "20" — the entitlement refusal, not a credential rejection' => ['20'],
+            'string "20" — overloaded, so classified as nothing narrower' => ['20'],
             'int 560 — the sandbox amount rule' => [560],
             'string "0999" — observed on the BackURL callback' => ['0999'],
             'string "05" — the PDF calls this a decline' => ['05'],
@@ -382,15 +392,23 @@ final class ResponseCodeTest extends TestCase
      *
      * THIS TEST ENCODES A DELIBERATE DECISION, NOT AN OVERSIGHT. The obvious
      * "fix" when it fails is to put string "20" back into
-     * isAuthenticationFailure(); read the amendment recorded below and the
-     * nonAuthenticationCodes() docblock first, because the probe corpus says
-     * the two forms are different conditions.
+     * isAuthenticationFailure(); read nonAuthenticationCodes()'s docblock and
+     * CONVENTIONS.md §13 first.
+     *
+     * It once said the probe corpus showed the two forms to be different
+     * conditions. It does not: string "20" has since arrived carrying the same
+     * credential rejection as the integer form (case L6.2), so this is a
+     * conceded gap rather than a clean boundary, and
+     * testTheStringFormOfTwentyIsStillNotAnAuthenticationFailure() pins it open
+     * on purpose.
      *
      * See nonAuthenticationCodes() for which mutation each of the other rows
-     * catches. The cost of getting this wrong is a caller told to check its
-     * credentials over a failure that has nothing to do with them — which for
-     * string "20" is exactly what would happen: it means the client is not
-     * entitled to the binding payment type, and no credential change fixes it.
+     * catches. The cost runs both ways, which is why the choice is argued rather
+     * than obvious: classifying string "20" would tell a caller to check its
+     * credentials over six observed refusals that no credential change fixes,
+     * and not classifying it leaves the seventh — a real credential rejection —
+     * reaching the caller as a plain ApiException carrying the gateway's own
+     * accurate text.
      */
     #[DataProvider('nonAuthenticationCodes')]
     public function testNoOtherCodeIsAnAuthenticationFailure(int|string $raw): void
@@ -398,26 +416,102 @@ final class ResponseCodeTest extends TestCase
         self::assertFalse(
             ResponseCode::fromWire($raw)->isAuthenticationFailure(),
             sprintf(
-                'Deliberate: %s is not integer 20, the only form observed as a credential rejection. '
-                . 'String "20" is in this set on purpose — all six of its occurrences carry "Client payment '
-                . 'type BindingMainRest is not available", an entitlement refusal, so it is classified as '
-                . 'nothing narrower than ApiException. A loose or substring comparison would admit these, '
-                . 'and re-adding the string form would too; adding a classification later is reversible, '
-                . 'removing one is not. See nonAuthenticationCodes().',
+                'Deliberate: %s is not integer 20, the only form classified as a credential rejection. '
+                . 'String "20" is in this set on purpose — six of its occurrences carry "Client payment '
+                . 'type BindingMainRest is not available", an entitlement refusal, and a seventh carries '
+                . '"Incorrect Username and Password" from GetPaymentId, so the code names two conditions '
+                . 'and is classified as nothing narrower than ApiException. A loose or substring comparison '
+                . 'would admit these, and re-adding the string form would too; adding a classification later '
+                . 'is reversible, removing one is not. See nonAuthenticationCodes().',
                 var_export($raw, true),
             ),
         );
     }
 
     /**
+     * The conceded credential-rejection gap, pinned open on purpose.
+     *
+     * isAuthenticationFailure() fires on **integer 20 only**, so
+     * AuthenticationException is currently unreachable outside InitPayment. That
+     * is a known gap rather than a boundary: string "20" is overloaded across at
+     * least two unrelated meanings — an entitlement refusal from
+     * ActivateBinding, DeactivateBinding and GetBindings (cases A1.1, A1.3,
+     * A11.4, A11.5, B6.1, B6.2), and a **credential rejection** from
+     * GetPaymentId carrying "Incorrect Username and Password" (case L6.2). The
+     * second of those is exactly what this method is named for, and it is not
+     * classified.
+     *
+     * The gap is left open by decision, and the decision is recorded in
+     * CONVENTIONS.md §13 and in isAuthenticationFailure()'s own docblock. In
+     * short: the operation correlates with the two meanings across seven
+     * observations rather than explaining them, and because the sandbox client
+     * has no binding entitlement, a wrong password against a binding endpoint has
+     * never been observable — so a by-operation rule would rest on a set with one
+     * structurally unobservable cell. Discriminating by ResponseMessage instead is
+     * the code-to-description table CONVENTIONS.md §4.17 forbids. Meanwhile the
+     * current behaviour is the safe direction, because ApiException carries the
+     * gateway's own accurate text; adding a classification later is non-breaking,
+     * removing a wrong one is not.
+     *
+     * **This asserts the gap rather than the fix, which is deliberate.** A
+     * concession written only in prose drifts out of date silently; this one
+     * cannot. Whoever closes it turns this test red, and the failure message sends
+     * them to the paragraphs that must be rewritten with it. The observation that
+     * would justify closing it is a wrong password against GetBindings, once the
+     * sandbox client has binding permissions.
+     *
+     * This test is not what covers the behaviour, and it should not be read as
+     * if it were. The behaviour is already covered elsewhere in this suite,
+     * several times over: a mutation that classifies string "20" reddens other
+     * tests whether this one exists or not. What this test adds is a **named,
+     * self-describing concession** — one assertion that says which decision was
+     * taken, and whose failure message routes whoever reversed it to the two
+     * artifacts that must be rewritten with it: isAuthenticationFailure()'s own
+     * docblock and the §13 entry in CONVENTIONS.md. Other tests going red report
+     * that a contract changed; this one reports which decision changed, and that
+     * is the only thing it is here for.
+     *
+     * Both assertions stay. Without the integer one, `return false;` would
+     * satisfy this test while destroying the classification that does exist.
+     * Without the string one, no concession is pinned at all.
+     *
+     * The two subjects are the two wire forms of one code, written as literals
+     * because no source of truth in this repository can derive them: the API
+     * surface manifest declares field *types*, never response-code values, and
+     * CONVENTIONS.md §4.3 records that the bank adds codes without notice, which
+     * is why ResponseCode is a value object and not an enum there is anything to
+     * reflect over (AL-003's derivability boundary).
+     */
+    public function testTheStringFormOfTwentyIsStillNotAnAuthenticationFailure(): void
+    {
+        self::assertFalse(
+            ResponseCode::fromWire('20')->isAuthenticationFailure(),
+            'The conceded gap has been closed: string "20" now classifies as an authentication failure. '
+            . 'That may well be an improvement, not a failure — but string "20" has been observed as an '
+            . 'entitlement refusal six times and as a credential rejection once, so before keeping the '
+            . 'change, rewrite the concession in isAuthenticationFailure()\'s docblock and the §13 entry in '
+            . 'CONVENTIONS.md that both state the gap is open, and delete this test.',
+        );
+
+        self::assertTrue(
+            ResponseCode::fromWire(20)->isAuthenticationFailure(),
+            'Integer 20 must still classify. A gap pinned open by classifying nothing is not the '
+            . 'concession this test guards.',
+        );
+    }
+
+    /**
      * equals() is strict about the wire type, and that is the intended answer.
      *
-     * int 20 and string "20" are two conditions sharing one code: they arrived
-     * from different endpoints carrying different ResponseMessages — "Incorrect
-     * Username and Password" on InitPayment against "Client payment type
-     * BindingMainRest is not available" on the three binding endpoints — and
-     * only the integer form is a credential rejection. This value object exists
-     * to preserve what arrived rather than paper over the difference. Executed
+     * int 20 and string "20" are two wire values, and the type is what varies by
+     * endpoint (CONVENTIONS.md §4.3); this value object exists to preserve what
+     * arrived rather than paper over the difference. The claim once made here —
+     * that the two forms of 20 "arrived from different endpoints carrying
+     * different ResponseMessages" — is falsified: string "20" has since arrived
+     * from GetPaymentId carrying the integer form's own "Incorrect Username and
+     * Password" (case L6.2). So === separates two values that meant one thing on
+     * that occasion, and it is still the intended answer, because the reason for
+     * it was never the meaning. Executed
      * on PHP 8.3.28: both 20 == "20" and "20" == 20 are true, so the first two
      * assertions change when === becomes ==. The last two are the counterweight
      * that stops the mutation being "return false".
@@ -491,6 +585,10 @@ final class ResponseCodeTest extends TestCase
      *
      * The ResponseMessage is the gateway's own entitlement text, which is how
      * the caller still learns what happened without a dedicated exception class.
+     * That is also the answer to the case this fixture does not show: string "20"
+     * has been observed carrying a credential rejection too (case L6.2), and such
+     * a caller likewise reads the gateway's own accurate message off a plain
+     * ApiException. The type is what is lost, not the information.
      */
     public function testTheStringFormOfTwentyBecomesExactlyAnApiException(): void
     {
@@ -502,9 +600,9 @@ final class ResponseCodeTest extends TestCase
         self::assertSame(
             ApiException::class,
             $exception::class,
-            'Deliberate: string "20" is an entitlement refusal, not a credential rejection, in all six of its '
-            . 'observed occurrences. It must not be classified as an AuthenticationException. See '
-            . 'nonAuthenticationCodes().',
+            'Deliberate: string "20" names two conditions — an entitlement refusal in six observations and '
+            . 'a credential rejection in a seventh — so it is not classified as an AuthenticationException. '
+            . 'See nonAuthenticationCodes() and CONVENTIONS.md §13.',
         );
         self::assertIsString($exception->responseCode(), 'GetBindings answers with a string (CONVENTIONS.md §4.3).');
         self::assertSame('20', $exception->responseCode(), 'The narrowing must not normalise "20" to 20.');
@@ -528,9 +626,9 @@ final class ResponseCodeTest extends TestCase
             ApiException::class,
             $exception::class,
             sprintf(
-                'Deliberate: %s is not an observed credential rejection and must not be classified as '
-                . 'anything narrower than ApiException. String "20" is in this set by the same '
-                . 'amendment — it is an entitlement refusal, and only integer 20 classifies.',
+                'Deliberate: %s must not be classified as anything narrower than ApiException. String '
+                . '"20" is in this set as a conceded gap — it has been observed as both an entitlement '
+                . 'refusal and a credential rejection, and only integer 20 classifies.',
                 var_export($raw, true),
             ),
         );

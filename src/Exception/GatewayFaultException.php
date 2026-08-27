@@ -39,7 +39,27 @@ use function sprintf;
  * for a payment that went through. CONVENTIONS.md §13 holds the evidence; it is
  * not repeated here.
  *
- * @todo unverified — see CONVENTIONS.md §13
+ * ## Real gateway output has produced this class, and what that added
+ *
+ * Every observation above was made by a hand-rolled probe. Case L5.4 is the
+ * first time this exception was raised by this package over a live response:
+ * GetPaymentDetails on an order it had registered once and never attempted,
+ * answering HTTP 500 with the envelope. Case L6.3 then asked the same question
+ * about the same payment with a **wrong password** and got the same fault —
+ * where a rejected credential against a *completed* payment had answered
+ * `ResponseCode` `"550"` (L5.3, CONVENTIONS.md §4.25). On this endpoint the
+ * fault therefore reaches the response ahead of any credential verdict, so a
+ * caller may infer nothing about its credentials from this exception: not that
+ * they were accepted, and not that they were rejected (CONVENTIONS.md §4.26).
+ *
+ * That is a **fourth** registered-but-never-attempted payment on the fault side
+ * and it does not close the question above. What separates that group from the
+ * one answered with `"550"` is still unestablished; §4.26 records one visible
+ * difference between them as a candidate discriminator that nothing has tested,
+ * and it must not be read as the answer. The marker below stays for exactly
+ * that reason.
+ *
+ * @todo unverified — see CONVENTIONS.md §13 (what separates this fault from a `"550"` business answer, for an order in the same state, is still unestablished — L5.4 added a fourth data point without identifying it)
  */
 final class GatewayFaultException extends RuntimeException implements VposExceptionInterface
 {

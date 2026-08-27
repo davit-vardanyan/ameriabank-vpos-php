@@ -120,7 +120,10 @@ Both success forms have now been seen on the wire, rather than only declared.
 `int 1` came back from `InitPayment` on P1, and `string "00"` came back six
 times: from `GetPaymentDetails` on P3, P4.1b, P4.3b and P6, and from
 `RefundPayment` on P4.1 and P4.3. Until that run the `"00"` row rested on vendor
-documentation alone.
+documentation alone. §4.24's run added a **third** endpoint to the row rather
+than a larger number to it: `GetPaymentId` answered `"00"` on L6.1. The row
+still reads "all others" on the strength of the endpoints actually seen, and
+most of the eleven this package ships have never answered `"00"` at all.
 
 Unknown codes must never throw.
 
@@ -197,18 +200,49 @@ sandbox's blanket 10-AMD rule, not on precision. See §13. There is no
 The completed payment described in §4.14 does not settle precision, and does not
 settle this subsection at all. Every amount that run sent was whole — 10, then
 refunds of 4 and 3, then an attempted 10 — and each was sent as a JSON
-**integer**, alongside an integer `OrderID`. The decimal-string rule above is
-what this package emits and is precisely what that run did not emit, so the
-bytes the package writes have still never been put to the gateway. Read that run
-as re-confirming the deserialiser's `10` arm and nothing further.
+**integer**, alongside an integer `OrderID`. Read that run as re-confirming the
+deserialiser's `10` arm and nothing further.
+
+**The bytes this package writes have now been put to the gateway, and were
+accepted.** This paragraph used to say the opposite; §4.24's run falsified it
+three times over. Each of these requests was serialised by this package itself:
+
+| Case | On the wire | Answer |
+|---|---|---|
+| L1 | `InitPayment` — `"Amount":"10.00"` | `ResponseCode` `1`, `"OK"` |
+| L4.1 | `RefundPayment` — `"Amount":"4.00"` | `"00"`, `"Success"` |
+| L4.3 | `RefundPayment` — `"Amount":"3.00"` | `"00"`, `"Success"` |
+
+All three are JSON **strings**, hex-confirmed by the enclosing `22` quotes in the
+captured request body, where every earlier request on record sent a JSON
+integer. The deserialiser's quoted-decimal arm was documentation-sourced until
+that run; it is now observed. Two further details of the same bodies: `OrderID`
+went as a bare JSON integer beside the quoted `Amount`, so the mixed encoding
+this package emits is accepted exactly as it stands; and
+`JSON_UNESCAPED_SLASHES` is now confirmed on real bytes, the `BackURL` appearing
+as `http://…` with no `\/` anywhere.
+
+**That settles the encoding, not the precision.** All three fractions were `.00`.
+No fractional amount has ever reached the gateway in either direction, and
+§13's amount-precision entry is untouched by the paragraph above — it must not
+be read as narrowing it.
 
 `Currency` is carried on the wire as an ISO 4217 **numeric** string. Only
-`"051"` (AMD) is confirmed accepted — it was sent in 24 requests that returned
-`ResponseCode` 1, across probe phases A, B, C and the payment-page run. `"840"`
-was sent exactly once, and that request was rejected with `ResponseCode` 560 by
-the sandbox's blanket 10-AMD amount rule; it says nothing about currency
+`"051"` (AMD) is confirmed accepted, and the evidence is stated as a sweep
+rather than as a count: **every request this project has ever sent that carried
+a currency at all carried `"051"`, save exactly one** — across probe phases A, B
+and C, the payment-page run, and §4.24's run through this package, every
+success-coded request carried that value and no other. The one exception carried
+`"840"`, and it was rejected with `ResponseCode` 560 by the sandbox's blanket
+10-AMD amount rule, which fires on the amount and says nothing about currency
 handling. `"978"` and `"643"` have never been sent at all. USD, EUR and RUB are
 therefore all PDF-sourced and unverified.
+
+A count is deliberately not given. This sentence used to name one, and the
+number was correct on the day it was written and then read as the whole record
+the moment another run added requests to it — the §7 failure mode, in a
+different place. Derive it from the probe record if it is ever needed; do not
+restate it here.
 
 No probe has ever sent an alpha code, so "numeric, not alpha" is an inference
 from the one accepted value, not an observation of a rejected alternative. A
@@ -230,8 +264,29 @@ JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION
 | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
 ```
 
-`JSON_UNESCAPED_UNICODE` is required — Armenian `Description` values round-trip
-correctly and must not be escaped.
+`JSON_UNESCAPED_UNICODE` is required, and stays required. L1 captured the
+outgoing body carrying raw UTF-8 Armenian — the Armenian codepoints appear
+literally in the bytes, with no `\u` sequence anywhere in the body — and the
+gateway accepted that request with `ResponseCode` `1`, `"OK"`. Removing or
+softening this flag would be a regression, not a correction.
+
+What was wrong is the **reason** this section used to give. It read "Armenian
+`Description` values round-trip correctly and must not be escaped". They do not
+round-trip. Armenian text sent in `Description` returns from `TrxnDescription`
+with each non-Latin codepoint replaced by U+00BF; the codepoint count and the
+ASCII prefix are preserved (L1 and L3, four separate reads of one payment).
+Only Armenian has been tested, only in `Description` read back through
+`TrxnDescription`, and only on the test environment. §4.15 states what a
+consumer must do about it; §13 records its status with the bank.
+
+Where the wrong reason came from is worth recording, because it is an easy trap
+to walk back into. One earlier probe had sent an Armenian `Description`, and it
+read the gateway's *acceptance* of the value — it never read the value back.
+The one later call that queried that payment answered with the HTTP 500 fault,
+so no `TrxnDescription` ever came back from that order at all. P1 sent Latin
+text, so P3's `TrxnDescription` echo (§4.15) was Latin only. §4.24's run is the
+first time an Armenian `Description` was ever read back. **Acceptance is not a
+round trip.**
 
 ### 4.8 Field spellings are load-bearing
 
@@ -243,7 +298,7 @@ Reproduce these verbatim. **Never "correct" them.** They are the wire format.
 | `IsAvtive` | `CardBindingFiled` |
 | `resposneCode` | BackURL query parameter |
 | `rrn` | `PaymentDetailsResponse` (lowercase) |
-| `PaymentId` | `GetPaymentIdResponse` only — every other model uses `PaymentID` |
+| `PaymentId` | `GetPaymentIdResponse` only — every other model uses `PaymentID`; confirmed on the wire on L6.1 |
 | `OrderId` | `GetPendingTransactionsResponse` only — every other model uses `OrderID` |
 | `MerchantId` | `PaymentDetailsResponse`, `MakeBindingPaymentResponse` — lowercase `d`, confirmed on the wire on P3 |
 | `TerminalId` | `PaymentDetailsResponse`, `MakeBindingPaymentResponse` — lowercase `d`, confirmed on the wire on P3 |
@@ -271,14 +326,22 @@ orderID, resposneCode, paymentID, opaque, description
 ```
 
 `description` is undocumented. It carries error text on a failure and approval
-text on a success — the first successful callback ever captured, P2, delivered
-`Operation Approved `, **with a trailing space**, which this package hands back
-verbatim rather than trimming. There is no HMAC, no signature and no shared
-secret. **Anyone can forge `resposneCode=00`.**
+text on a success — **both** successful callbacks on record, P2 (the first ever
+captured) and L2, delivered `Operation Approved `, **with a trailing space**,
+which this package hands back verbatim rather than trimming. L2 arrived
+byte-identical to P2, trailing space included, on a different payment and a
+different order, so the space is not a one-off oddity of a single redirect that a
+later call might tidy up. Two observations is still two, but they agree. There is
+no HMAC, no signature and no shared secret. **Anyone can forge
+`resposneCode=00`.**
 
-P2 also confirms all five key spellings against a *successful* callback rather
-than a failed one, `resposneCode` included. Its `paymentID` arrived in lowercase
-(§4.12).
+P2 confirmed all five key spellings against a *successful* callback rather than a
+failed one, `resposneCode` included. L2 carried the same five under the same
+spellings, and for the §13 entry that tracks this exposure it is the stronger of
+the two: P2 was a capture read by hand, whereas L2's query string went through
+`VposCallback::fromQuery()`, so it is the pinned literal-key matching in this
+package — not a reader — that was confronted with real gateway output and
+accepted it. Both carried `paymentID` in lowercase (§4.12).
 
 The public API is designed so that verification is the only ergonomic path:
 
@@ -336,13 +399,22 @@ no SOAP operation ships in v1.0.
 - `Accept: application/xml` is honoured. `<CardBindingFileds />` self-closes
   when empty — an XML parser must not read that as absent.
 - `PaymentID` is a 36-character GUID, and its **case depends on which channel
-  delivers it**. `InitPayment` returned it uppercase on P1; the BackURL callback
-  echoed that same identifier in lowercase on P2. This package normalises
-  neither (§4.8), so comparing the two case-sensitively produces a mismatch
-  that is not one. `GetPaymentDetails` has been given the uppercase form and
-  accepted it; it has never been given the lowercase form — see §13, because
-  that is the only request `verify()` makes. `PaymentID` is an empty string,
-  never null, on failure.
+  delivers it**. Three channels are on record. `InitPayment` returns it
+  **uppercase** (P1, L1); the BackURL callback echoes the same identifier
+  **lowercase** (P2, L2); and `GetPaymentId` returns it **lowercase** as well
+  (L6.1), siding with the callback rather than with `InitPayment`. This package
+  normalises none of the three (§4.8), so comparing two of them case-sensitively
+  produces a mismatch that is not one. **`GetPaymentDetails` accepts either
+  form:** it was given the uppercase form on all ten calls the earlier record
+  holds, and the lowercase form on L3, where it answered HTTP 200,
+  `ResponseCode` `"00"` and the fully populated body of the payment asked for.
+  So the gateway **accepts the lowercase form** for a payment `InitPayment`
+  issued in uppercase, and the exposure §13 used to carry against
+  `Vpos::verify()` does not exist. Neither end normalised anything to achieve
+  that. Read that as the observation and not as a mechanism: only the two forms
+  the gateway itself issues have ever been sent, a mixed-case `PaymentID` never
+  has, and nothing here establishes case folding as a property of the endpoint.
+  `PaymentID` is an empty string, never null, on failure.
 - `PaymentDetailsResponse.OrderID`, `.OrderStatus`, `.PrimaryRC`, `.ActionCode`
   and `.ResponseCode` are all **`string`**, contradicting the PDF — declared so
   in the API surface manifest and observed so on P3.
@@ -417,6 +489,29 @@ carries no `ResponseMessage` key at all on any body ever observed, which is why
 diagnostic text arrives in `Description`. The callback's `description` (§4.10)
 is a third, unrelated field.
 
+**Armenian text does not survive that trip.** L1 sent a `Description` whose
+ASCII prefix was followed by seven Armenian codepoints. L3 returned it in
+`TrxnDescription` with **each non-Latin codepoint replaced by U+00BF**, the
+codepoint count and the ASCII prefix preserved byte for byte. Four reads of the
+same payment, spanning a 40-minute window and two refunds, returned it
+byte-identically. Both directions were success-coded — `1`/`"OK"` on the
+request, `"00"` on every read — so nothing on the wire reports that the value
+changed, and the substitution is lossy per codepoint, so the original cannot be
+reconstructed from the response.
+
+State the scope exactly, because the temptation to generalise is strong and
+nothing supports it. What was tested is **Armenian**, in **`Description`**, read
+back through **`TrxnDescription`**, on the **test** environment. Russian and
+every other script are untested. `Opaque` is untested — it came back
+byte-identical on L3, but its value was ASCII. `ClientName` came back Latin
+because the test card carries a Latin holder name, which says nothing about this
+behaviour. Nothing here is a claim about non-Latin text in general, and nothing
+here is a claim about how or where the gateway holds the value: this records
+what was sent and what came back.
+
+The consequence for a consumer is immediate: **a non-ASCII `Description` is not
+a reconciliation key.** §13 carries the entry, and the question is with the bank.
+
 ### 4.16 Three amount fields, and which one is stable
 
 Across P3, P4.1b and P4.3b/P6 — a payment of 10, refunded by 4 and then by 3:
@@ -470,14 +565,30 @@ from argument into evidence:
   top of two accurate messages the gateway had already sent.
 
 The success `ResponseMessage` also varies by endpoint, in the same shape as
-§4.3's `ResponseCode` type split: `InitPayment` answers `"OK"` (P1) and
-`RefundPayment` answers `"Success"` (P4.1, P4.3). Any local table would have had
-to invent one of the two. Read `responseMessage`; do not assume a word.
+§4.3's `ResponseCode` type split — and three endpoints now give three different
+answers. `InitPayment` answers `"OK"` (P1, L1); `RefundPayment` answers
+`"Success"` (P4.1, P4.3, L4.1, L4.3); and `GetPaymentId` answers the **empty
+string** — L6.1 returned `ResponseCode` `"00"` with `"ResponseMessage":""` on a
+call that succeeded and returned a `PaymentId`. Any local table would have had
+to invent two of the three, and the third is one no table would have guessed.
+Read `responseMessage`; do not assume a word, and never require a non-empty one
+as evidence of success.
 
 `RefundPayment` and `CancelPayment` echo `Opaque` on both success and refusal
-(P4.1, P4.3, P4.5, P5), so an `Opaque` value is now observed surviving four
-channels: the request, `GetPaymentDetails`, the callback, and the write
-responses.
+(P4.1, P4.3, P4.5, P5), so an `Opaque` value is observed surviving the request,
+`GetPaymentDetails`, the callback, and the write responses. §4.24's run carried
+a single value through every one of those on one payment, byte-identical each
+time: sent on the `InitPayment` request (L1), read back off the callback (L2),
+off `GetPaymentDetails` (L3), and off the `RefundPayment` responses (L4.1,
+L4.3).
+
+The channels are named rather than counted, and the payment page is why. A
+browser opened the page between L1 and L2, and the value came out the other side
+intact — but nothing read `Opaque` *at* the page, so the page is a hop the value
+survived and not a channel it was observed on. Counting it would have made this
+paragraph claim an observation nobody made, which is the same trap §4.7's
+currency count fell into. That value was ASCII, so it says nothing about
+§4.15's substitution.
 
 ### 4.18 `OrderStatus` and `PaymentState` are two fields, not two forms of one
 
@@ -557,15 +668,28 @@ reads" is **wrong**:
 | P4.1 | `RefundPayment`, money moved | 517.6 |
 | P4.3 | `RefundPayment`, money moved | 909.8 |
 
-Both refusals came back **faster than every read**. The cost is in the
-settlement, not in the verb.
+On that run both refusals came back faster than every read. The cost is in the
+settlement and not in the verb, and that much held again on §4.24's payment: its
+two money-moving refunds took 493.2 ms (L4.1) and 527.5 ms (L4.3), an order of
+magnitude above every read and every refusal in the same run.
+
+**The ordering did not hold, and must not be restated as a rule.** On §4.24's
+error run the two refusals were the *slowest* calls in it — 66.2 ms (L5.1,
+`RefundPayment` refused) and 69.3 ms (L5.2, `CancelPayment` refused) — against
+reads of 12.9 to 47.2 ms. What moved is read latency: the same endpoint answered
+in 169.7 to 216.4 ms during the refunds of L4 and in 12.9 to 24.8 ms during L5,
+minutes apart on the same sandbox client. So "a refusal comes back faster than a
+read" was true of one run and false of the next. What survives both is the
+shape: a refused write costs about what a read costs, and a write that settles
+costs several times more.
 
 That matters when choosing the timeout on the HTTP client you inject. The
 slowest operations here are exactly the ones §4.5 forbids retrying, so a timeout
 short enough to cut one of them off does not buy a retry — it buys an
 `IndeterminateStateException` and a reconciliation you have to perform by hand.
-These are one sandbox and one payment: read them as orders of magnitude, not as
-a budget.
+These are two sandbox runs and two payments: read them as orders of magnitude,
+not as a budget, and read the inverted ordering as the reason that caveat is a
+rule of this section rather than decoration.
 
 ### 4.22 Nothing the manifest declares was contradicted
 
@@ -586,12 +710,138 @@ Stated plainly, so §4.14's reach is not overstated. Each of these remains
 entirely unobserved, and each is held by its own §13 entry where one exists:
 
 a real **decline** code — this payment was approved · a **fractional** amount on
-the wire, and the decimal-string encoding this package emits (§4.7) · any
-currency but `"051"` · any binding operation · `ConfirmPayment` ·
-`GetPaymentId` · `GetPendingTransactions` · either production host · the SOAP
-surface · the payment page's `type` and `lang` parameters · a duplicate-order
-rejection · and the one request `Vpos::verify()` actually makes, which sends the
-callback's lowercase `PaymentID`.
+the wire · any currency but `"051"` · any binding operation · `ConfirmPayment` ·
+`GetPendingTransactions` · either production host · the SOAP surface · the
+payment page's `type` parameter, and its `lang` parameter for every value but
+`en` · a duplicate-order rejection.
+
+Four items have been struck from that list since it was written, all by §4.24's
+run, and they are named here so the deletions are visible rather than silent:
+the decimal-string `Amount` encoding this package emits has been sent and
+accepted (§4.7) · `GetPaymentId` has been called (§4.12, §4.17) · the one
+request `Vpos::verify()` makes has been made, with the callback's lowercase
+`PaymentID` (§4.12) · and a payment has completed through a page URL carrying
+`lang=en` (§4.24). Everything still listed above is untouched by that run.
+
+### 4.24 A second payment, and the first requests this package ever sent
+
+On 2026-08-27 a second payment went through the whole lifecycle on the test
+sandbox, and for the first time every request was built and sent by this
+package rather than by a hand-rolled probe. 10 AMD, by card, approved. Cases
+from that run are cited throughout this document as **L**n:
+
+| Case | Operation |
+|---|---|
+| L1 | `InitPayment` — `"Amount":"10.00"`, Armenian `Description` — `ResponseCode` `1`, `"OK"` |
+| L2 | the payment page, opened at `lang=en`, and the callback it produced — `resposneCode=00` |
+| L3 | `Vpos::verify()` — `GetPaymentDetails` on the callback's **lowercase** `PaymentID` |
+| L4.1 / L4.3 | two partial refunds — `"Amount":"4.00"` then `"3.00"`, both `"00"`, `"Success"` |
+| L4.1b / L4.3b | `GetPaymentDetails` after each |
+| L5.1 | a refund over the remaining balance — refused, `"07"` |
+| L5.2 | `CancelPayment` on the refunded payment — refused, `"07"` |
+| L5.3 | `GetPaymentDetails` with a **wrong password** — HTTP 200, `"550"` |
+| L5.4 | `GetPaymentDetails` on a second order, registered once and never attempted — HTTP 500 fault |
+| L6.1 / L6.2 | `GetPaymentId` with correct credentials, then with a wrong password |
+| L6.3 | a wrong password against L5.4's payment — the fault again |
+| L7 | one operation re-run through a capturing PSR-3 logger, over the real bodies |
+
+Read the reach exactly, as §4.14 requires of its own run. This is one payment,
+on the same single sandbox client, in AMD, by card, approved, on the test
+environment. What it adds over §4.14 is not a wider surface but a different
+question answered: §4.14 established what the gateway does, and this run
+established what the gateway does **with the bytes this package emits**. Three
+claims in this document did not survive it — §4.7's Armenian round trip, §4.7's
+"these bytes have never been sent", and §4.21's latency ordering — and one §13
+entry closed. §4.23 still holds for everything neither run reached.
+
+### 4.25 `"550"` is overloaded too, and carries no message at all
+
+L5.3 asked `GetPaymentDetails` about the completed payment with a **wrong
+password** and got HTTP 200, `ResponseCode` `"550"`, and a body in which every
+string field was empty except `Description`, which carried `"System Error"`.
+Three earlier reads of one never-attempted order got the same `"550"` from the
+same endpoint with **correct** credentials. So `"550"` is overloaded exactly as
+`"07"` is: one code, two unrelated conditions, and §4.17's prohibition on a
+code-to-description table covers it for the same reason. A table would have had
+to pick one.
+
+`"07"` at least arrived with a `ResponseMessage` that told its two cases apart.
+`"550"` does not. The response carries **no `ResponseMessage` key at all**,
+which is this endpoint's general shape (§4.15), so
+`ApiException::responseMessage()` is the empty string and the message reads:
+
+```
+GetPaymentDetails failed with response code 550: (no message)
+```
+
+The only diagnostic text the gateway sent is `Description: "System Error"`.
+`ApiException` carries the envelope's code and message and nothing else, and on
+a failure code the transport throws, so there is no response object for a caller
+to read that text off. **Do not read `(no message)` as this package dropping
+something the gateway said** — the field was absent — **and do not read `"550"`
+as meaning "wrong password".** It means what the gateway said and no more.
+
+One consequence matters for error handling. A wrong password on
+`GetPaymentDetails` produces neither `ResponseCode` `20` nor
+`AuthenticationException`: it produces this. §13's entry on `"20"` records where
+that leaves the exception hierarchy.
+
+### 4.26 The fault pre-empts credential evaluation, and one question stays open
+
+L5.4 asked `GetPaymentDetails` about an order registered by one `InitPayment`
+and never attempted, and got HTTP 500 `{"Message":"An error has occurred."}` —
+the fault §4.2 records. L6.3 then asked the same question about the same payment
+with a **wrong password** and got the **same fault**, not the `"550"` a rejected
+credential produced on L5.3. On this endpoint the fault therefore reaches the
+response ahead of any credential verdict. The practical rule: a caller can infer
+nothing about its credentials from a `GatewayFaultException` — not that they
+were accepted, and not that they were rejected. The fault says the gateway would
+not answer, and §13 already forbids reading more into it.
+
+L5.4 is also a **fourth** data point on §13's open question about this endpoint,
+and it does not resolve it. Three earlier probe cases each asked about an order
+registered and never attempted and each got the fault; three reads of one other
+such order got `"550"`. L5.4 lands on the fault side.
+
+One difference between the two groups is now visible, and it is recorded as a
+**candidate discriminator, not a finding**. Every payment on the fault side was
+registered exactly **once**, L5.4's included. The `"550"` side is a single
+payment that had been registered **twice**, by two `InitPayment` calls on the
+same `OrderID`, and then read three times — three reads of one payment, not
+three payments. What makes that a hypothesis rather than a finding is that
+nothing has ever tested it: no run has deliberately varied the registration
+count and read the outcome, no unknown, foreign or malformed `PaymentID` has
+ever been sent to this endpoint, and a sample of four against one admits several
+other readings. Do not act on it, and do not restate it as the answer.
+
+### 4.27 What §4.24's run re-confirmed, and one note on the redactor
+
+Marked as corroboration rather than as new findings. Each of these was already
+recorded, and each held on a second payment:
+
+- **`rrn` is byte-identical to `MDOrderID`** (§4.19) on every body of §4.24's
+  payment, at a value different from P3's. Reconciling on `rrn` and on
+  `mdOrderId` is still reconciling on the same value twice.
+- **§4.18's warning reproduced.** L4.1b returned `OrderStatus` `"4"` and
+  `PaymentState` `payment_refunded` with `DepositedAmount` 6.0 still
+  outstanding. The refunded status still does not mean fully refunded.
+- **§4.22 held again.** `PaymentDetailsResponse` returned exactly the thirty
+  fields the manifest declares — no undeclared key on any body, and the key
+  order byte-identical to P3's.
+- **§4.16's identity held.** `Approved = Deposited + Refunded` on every body:
+  10.0 = 10.0 + 0.0 on L3, 10.0 = 6.0 + 4.0 on L4.1b, 10.0 = 3.0 + 7.0 on
+  L4.3b. `Amount` still gets no arithmetic.
+
+One observation about this package rather than about the gateway, recorded here
+because §4.19's neighbouring rule reads the other way and the two are easily
+confused. §4.19 requires **hydration** to keep an empty string an empty string.
+The `Redactor` is not hydration and does the opposite: `ClientEmail`,
+`CardHolderID` and `BindingID` arrive `""` on a real body and are replaced
+wholesale with the redaction marker (L7), so a log reader cannot tell "absent"
+from "present but withheld". That is the fail-safe direction — a redactor that
+passed short values through would be a redactor with a length threshold — and it
+is an observation, not a defect. §6 governs the redactor and §4.19 governs the
+hydrator; they are permitted to differ here, and they must.
 
 ---
 
@@ -859,6 +1109,31 @@ Read it as a statement about the evidence, not as a list of defects in the
 package. Several entries describe behaviour that is very probably fine and has
 simply never been put to the gateway.
 
+- **Armenian text does not survive `Description` → `TrxnDescription`, and the
+  question is with the bank.** L1 sent an Armenian `Description`; L3 and the
+  three reads after it returned it in `TrxnDescription` with each non-Latin
+  codepoint replaced by U+00BF, the codepoint count and the ASCII prefix
+  preserved (§4.15). Both directions were success-coded, so nothing on the wire
+  reports the loss, and the substitution is lossy per codepoint, so the original
+  cannot be recovered from the response. Scope, exactly: Armenian, in
+  `Description`, read back through `TrxnDescription`, on the test environment.
+  Russian and every other script are untested, `Opaque` is untested, and
+  `ClientName` came back Latin only because the test card carries a Latin holder
+  name. Nothing beyond what was sent and what came back has been established or
+  is asserted here.
+
+  This has been reported to the bank's vPOS support address, asking the single
+  question of whether non-Latin text is expected to survive the round trip or
+  whether merchants should treat both fields as ASCII-only. No answer has been
+  received. The evidence dossier behind that report is a maintainer-side file
+  and is deliberately not in this repository, so — as with the SOAP entry below
+  — the report itself is asserted here rather than checkable here; the
+  observation above is what a reader of the published package can act on. Until
+  there is an answer, **do not use a non-ASCII `Description` as a
+  reconciliation key** — and note that this package will not transliterate on
+  your behalf to hide the problem, because silently altering a merchant's text
+  is worse than reporting that the gateway did.
+
 - **Amount precision is unverified for every currency.** The two probe cases
   that would have settled it — 10.55 AMD and 10.55 USD — both returned
   `ResponseCode` 560, `"In test mode amount must be 10 AMD"`. That is the
@@ -867,9 +1142,47 @@ simply never been put to the gateway.
   amount. The ISO exponent of 2 in §4.7 is therefore the standards-correct
   choice, not an observed one.
 
+  §4.24's run does not narrow this entry by one step, and §4.7 says so at the
+  point a reader might think otherwise: it sent `"10.00"`, `"4.00"` and `"3.00"`
+  and the gateway accepted all three, which observes the **encoding** — a quoted
+  decimal string — and says nothing about precision, because every fraction was
+  `.00`.
+
 - **Bindings and two-step payments are not permitted** on the sandbox client
   that was available. `MakeBindingPayment`, `GetBindings`, `ActivateBinding`,
   `DeactivateBinding` and `ConfirmPayment` could not be verified.
+
+- **Whether a binding endpoint can answer a credential rejection with `"20"` is
+  structurally unobservable on that sandbox client.** String `"20"` carries at
+  least two unrelated meanings. From `ActivateBinding`, `DeactivateBinding` and
+  `GetBindings` it is an **entitlement refusal**, always with `"Client payment
+  type BindingMainRest is not available"` — six probe cases across those three
+  endpoints. From `GetPaymentId` it is a **credential rejection**, with
+  `"Incorrect Username and Password"` (L6.2). The two are separable only by the
+  operation, which correlates with them across seven observations rather than
+  explaining them, or by the message, which §4.17 forbids this package to
+  interpret.
+
+  The cell that would decide it has never been observable. Because the client
+  has no binding entitlement, a wrong password has never been sent to a binding
+  endpoint at all, so a rule discriminating by operation would rest on a set
+  with one empty cell — and would misclassify that cell the moment it filled.
+  This package therefore does not discriminate: `ResponseCode` treats **only
+  integer `20`** as an authentication failure, which is the form `InitPayment`
+  returns (§4.3), and string `"20"` reaches the caller as a plain `ApiException`
+  carrying the gateway's own text.
+
+  **Stated plainly, because a caller must not have to discover it from
+  behaviour: `AuthenticationException` is currently unreachable outside
+  `InitPayment`.** Do not rely on catching it to detect a credential problem on
+  any other operation — catch `ApiException` and read `responseCode()` and
+  `responseMessage()`, which carries the gateway's own
+  `"Incorrect Username and Password"`. Note also that a credential rejection
+  does not always answer `20` at all: on `GetPaymentDetails` a wrong password
+  produced `"550"` with no message (§4.25). Adding the classification later is
+  non-breaking, since `AuthenticationException` extends `ApiException`; removing
+  a wrong one would not be. The first test when binding permissions arrive is a
+  wrong password against `GetBindings`, and that single observation settles it.
 
 - **The duplicate-order condition has never been reproduced.** The PDF
   attributes response codes `01` and `08204` to a duplicate `OrderID`. Neither
@@ -919,15 +1232,24 @@ simply never been put to the gateway.
   from `GetPaymentDetails` means the gateway would not answer, and nothing more
   may be read into it.
 
-  A **third** outcome class now exists, and it is the ordinary one. This
-  endpoint has been called ten times in the life of this repository: three
-  returned the HTTP 500 fault, three returned HTTP 200 with `ResponseCode`
-  `"550"`, and four — P3, P4.1b, P4.3b and P6 — returned HTTP 200 with `"00"`
-  and a fully populated body against the completed payment of §4.14. Do not read
-  500-or-550 as exhausting the space. The original question is untouched by
-  that: those four asked about a payment that had gone through, and what
-  separates the two earlier groups, both asking about an order registered and
-  never attempted, is still unknown.
+  A **third** outcome class now exists, and it is the ordinary one. The probe
+  record holds ten calls to this endpoint: three returned the HTTP 500 fault,
+  three returned HTTP 200 with `ResponseCode` `"550"`, and four — P3, P4.1b,
+  P4.3b and P6 — returned HTTP 200 with `"00"` and a fully populated body
+  against the completed payment of §4.14. Do not read 500-or-550 as exhausting
+  the space. The original question is untouched by that: those four asked about a
+  payment that had gone through, and what separates the two earlier groups, both
+  asking about an order registered and never attempted, is still unknown.
+
+  §4.24's run called it again, through this package, and landed in all three
+  classes: a populated body on L3, L4.1b and L4.3b, `"550"` on L5.3, and the
+  fault on L5.4 and again on L6.3. That leaves the arithmetic above intact as a
+  statement about the earlier record and adds a **fourth** registered-but-never-
+  attempted payment answering with the fault. §4.26 records what those two new
+  cases did establish — that the fault reaches the response ahead of any
+  credential verdict — and records the registration-count difference between the
+  two groups as a candidate discriminator that nothing has tested. The question
+  in this entry stays open.
 
 - **`BankInfo.BankName` has never been populated.** §4.19 settles the wider
   question — the object arrived present on a completed payment, carrying
@@ -972,38 +1294,21 @@ simply never been put to the gateway.
   Settling this needs two requests against the now-working page: the same
   `PaymentID` opened with `type=13` and with `type` omitted.
 
-- **`Vpos::verify()` has never made its own request, and §4.12's case split is
-  why.** `verify()` round-trips `GetPaymentDetails` for the `PaymentID` the
-  **callback** carried, and the callback's form is lowercase. Every
-  `GetPaymentDetails` call ever made — the six against orders that were never
-  attempted, and P3, P4.1b, P4.3b and P6 against the completed payment — sent the
-  **uppercase** form `InitPayment` returns.
+- **The payment page's `lang` parameter is exercised for `en` only.** §4.13
+  publishes the page as `{base}Payments/Pay?id=…&lang={am|ru|en}`, and
+  `Language` encodes exactly those three spellings. L2 opened the page at a URL
+  `paymentPageUrl()` produced carrying `lang=en`, the card form rendered, a card
+  was charged, and the callback came back `resposneCode=00` — so that one
+  spelling is accepted in the only sense that matters. Read that narrowly: what
+  the page rendered *in* was not recorded, so `lang=en` is confirmed harmless
+  rather than confirmed to have selected English. Which `lang` §4.14's earlier
+  run passed, if any, is still not on record.
 
-  Whether the gateway accepts a lowercase `PaymentID` is therefore unknown, and
-  it is the *only* request `verify()` ever makes. If that identifier is matched
-  case-sensitively anywhere upstream, `verify()` fails on every callback while
-  `payments()->details()` keeps working — and it fails at the moment a customer
-  is returning from a payment they have already made. This package normalises
-  the case of neither form, per §4.8; that is the deliberate choice and this
-  entry is its cost. One probe settles it: send a callback's lowercase
-  `PaymentID` to `GetPaymentDetails` and read the response.
-
-  Note what is *not* at issue here. §4.14's run shows `GetPaymentDetails`
-  returning a populated `OrderID` — `"4565037"`, matching the callback's byte for
-  byte — so the order cross-check `verify()` performs on that value has now been
-  exercised against real gateway output, and it passes. It is the request, not
-  the comparison, that remains unobserved.
-
-- **The payment page's `lang` values are unexercised.** §4.13 publishes the page
-  as `{base}Payments/Pay?id=…&lang={am|ru|en}`, and `Language` encodes exactly
-  those three spellings. The page renders now (§4.14), but **which** `lang` the
-  completed run passed, if any, is not in the probe record — so no spelling is
-  confirmed accepted and none is known to be rejected.
-
-  Nor is a wrong spelling known to be harmless: what that page does with a `lang`
-  it does not recognise has never been observed, and the two entries above about
-  `type` say why a REST finding about unknown fields does not carry across to a
-  query string read by an ASP.NET page. Settling this costs three page loads.
+  `am` and `ru` have never been sent. Nor is a wrong spelling known to be
+  harmless: what that page does with a `lang` it does not recognise has never
+  been observed, and the two entries above about `type` say why a REST finding
+  about unknown fields does not carry across to a query string read by an
+  ASP.NET page. Settling the rest costs two page loads.
 
 - **The five BackURL parameter spellings are matched exactly and
   case-sensitively, so an upstream rename breaks the merchant's callback
@@ -1038,6 +1343,21 @@ simply never been put to the gateway.
   `Operation Approved ` — **with a trailing space** — which this package hands
   back verbatim rather than trimming. Log those values as diagnostics; do not
   compare against them.
+
+  L2 (§4.24) is the second, and it corroborates the entry harder without closing
+  it either. All five keys arrived under the pinned spellings again, on a
+  different payment and a different order, and `description` came back
+  byte-identical to P2's, trailing space included. What makes L2 the better
+  evidence *for this entry specifically* is not the second sighting but where it
+  was read: P2 was a capture read by hand, whereas L2's query string was handed
+  to `VposCallback::fromQuery()`, so the exposure this entry exists to track —
+  the pinned literal-key matching in this package — is the thing that met real
+  gateway output and accepted it. A hand-read capture cannot establish that; it
+  establishes only what the gateway sent.
+
+  Two observations is still two, and neither is a guarantee about the third. The
+  entry stays open: a rename would still throw on `paymentID` or `orderID` and
+  still read `null` on the other three, and nothing here makes that less true.
 
 - **SOAP reporting is deferred from v1.0, and what is known about that
   deferral divides sharply into what can be checked and what cannot.**

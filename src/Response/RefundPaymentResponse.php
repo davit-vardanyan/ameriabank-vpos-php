@@ -28,18 +28,25 @@ use DavitVardanyan\AmeriabankVpos\Support\ResponseHydrator;
  * manifest states no requiredness — "Additional information" reads "None." for
  * every field of every model.
  *
- * Observed three times: P4.1 and P4.3 succeeded with `ResponseCode` `"00"` and
- * `ResponseMessage` `Success`; P4.5 asked for more than the remaining balance
- * and was refused with `"07"` and `Refund amount exceeds deposited amount`. All
- * three carried the InitPayment `Opaque`, and all three arrived under exactly
- * the manifest's three field names.
+ * Observed on both payments that have gone through end to end, and on both
+ * attempts to over-refund one. P4.1, P4.3, L4.1 and L4.3 succeeded with
+ * `ResponseCode` `"00"` and `ResponseMessage` `Success`. P4.5 and L5.1 asked for
+ * more than the remaining balance and were refused with `"07"` — P4.5 carrying
+ * `Refund amount exceeds deposited amount`; no message is on record for L5.1.
+ * The L cases were serialised and hydrated by this package rather than by a
+ * hand-rolled probe. Every one of them carried the InitPayment `Opaque`, and
+ * every one arrived under exactly the manifest's three field names.
+ *
+ * The cases are named and not counted. A bare total restated beside them reads
+ * as the whole record and then goes stale on the next run, which is the drift
+ * CONVENTIONS.md §4.7 stopped restating a count for.
  */
 final readonly class RefundPaymentResponse
 {
     /**
-     * @param ResponseCode $responseCode    Wire key `ResponseCode`. String on this endpoint; "00" is the success value, observed as such on probe cases P4.1 and P4.3.
-     * @param string       $responseMessage Wire key `ResponseMessage`. `Success` on this endpoint (P4.1, P4.3) where InitPayment says `OK` — the success word varies by endpoint, so nothing may be matched on it.
-     * @param string|null  $opaque          Wire key `Opaque`. Echoed back from InitPayment, on a refusal as much as on a success (P4.5).
+     * @param ResponseCode $responseCode    Wire key `ResponseCode`. String on this endpoint; "00" is the success value, observed as such on cases P4.1, P4.3, L4.1 and L4.3.
+     * @param string       $responseMessage Wire key `ResponseMessage`. `Success` on this endpoint (P4.1, P4.3, L4.1, L4.3) where InitPayment says `OK` and GetPaymentId sent `""` — the success word varies by endpoint and may be absent, so nothing may be matched on it.
+     * @param string|null  $opaque          Wire key `Opaque`. Echoed back from InitPayment, on a refusal as much as on a success (P4.5, L5.1).
      */
     public function __construct(
         public ResponseCode $responseCode,

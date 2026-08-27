@@ -223,6 +223,18 @@ authorized` on a deposited payment, `Approved. - Refunded payment back to client
 card` once a refund has run. `$details->description` is the gateway talking, not
 you (CONVENTIONS.md §4.15).
 
+**That echo is not byte-exact, so never use a non-ASCII `Description` as a
+reconciliation key.** An Armenian `Description` came back from
+`TrxnDescription` with every Armenian codepoint replaced by `¿` (U+00BF); the
+codepoint count and the ASCII prefix survived, the letters did not. Reconcile on
+`OrderID`, or on an ASCII value you put in `Opaque`, and treat
+`trxnDescription` as text for a human to read rather than a value to compare.
+Scope this exactly as it was observed: Armenian only, `Description` →
+`TrxnDescription` only, on the test environment. Russian and other scripts are
+untested, and the request itself is accepted — the package sends your text as raw
+UTF-8 and the gateway takes it. The question of why the value comes back altered
+is with the bank (CONVENTIONS.md §4.15, §13).
+
 `Amount` holds an integer minor-unit count and a `Currency`; there is no
 constructor taking a float, and none will be added. Build one with
 `Amount::fromMinorUnits(1000, Currency::AMD)` or
@@ -313,9 +325,13 @@ very same identifier in lowercase. This package normalises neither, because the
 case a channel sends is part of that channel's wire format. Compare the two
 case-insensitively, or compare `orderID` instead; a case-sensitive `===` between
 them reports a mismatch that is not one (CONVENTIONS.md §4.12). The callback's
-`description` needs the same care for a different reason: the one successful
-callback on record delivered `Operation Approved ` with a **trailing space**,
-handed back verbatim rather than trimmed. Log it; never compare against it.
+`description` needs the same care for a different reason: **both** successful
+callbacks on record delivered `Operation Approved ` with a **trailing space**,
+handed back verbatim rather than trimmed. The second arrived byte-identical to
+the first, trailing space included, on a different payment and a different
+order — so the space is not a one-off oddity of a single redirect that a future
+call might tidy up. Two observations is still two, but they agree. Log the
+value; never compare against it.
 
 `verify()` is `details()` plus one check you would otherwise have to write
 yourself, and it is worth knowing which. The `paymentID` in that query string is
@@ -344,10 +360,11 @@ must hold:
   response carries an `OrderID`.** If that field comes back absent or null the
   check is skipped and you get no order-identity protection from it; if it comes
   back blank it is refused rather than skipped, so the three outcomes are match →
-  pass, blank → refuse, absent → skip. The completed payment on record produced
+  pass, blank → refuse, absent → skip. Both completed payments on record produced
   the first of the three — a populated `OrderID`, identical to the callback's,
-  reaching the comparison and passing it — but that is one payment, so keep your
-  own record and compare `$details->orderId` against it if you hold one;
+  reaching the comparison and passing it, on the second one through `verify()`
+  itself — but that is two payments on one sandbox client, so keep your own
+  record and compare `$details->orderId` against it if you hold one;
 - `approvedAmountRaw` is the amount you asked for. Compare **that** one, not
   `depositedAmountRaw`: `DepositedAmount` is the remaining refundable balance
   and decrements as refunds run, so it is correct before a refund and wrong
@@ -437,20 +454,36 @@ asked — nothing more. The payment's own outcome is in the body, and reading it
 step 3's three checks, not this method's return.
 
 Do not read the converse into it either: a query about a payment that never
-completed does **not** reliably come back at all. `GetPaymentDetails` has been
-observed ten times. The four calls made against a payment that had actually been
-paid all answered HTTP 200 with `ResponseCode` `"00"` and a fully populated
-body. The other six were all made against orders that were registered and never
-attempted, and every one of those is a failure, and so throws: three answered
-HTTP 500 with the ASP.NET envelope `{"Message":"An error has occurred."}`, which
-surfaces as `GatewayFaultException`, and three answered HTTP 200 carrying
-`ResponseCode` `"550"` and `Description` `"System Error"`, which surfaces as
-`ApiException`. What separates those two failure shapes from each other has
-never been explained
-(see [Unverified behaviour](#unverified-behaviour)). So expect the unhappy path
-to **throw** rather than to hand you a body to inspect, and catch both — a
-thrown `GatewayFaultException` means the gateway would not answer, which is
-evidence neither that the payment happened nor that it did not.
+completed does **not** reliably come back at all. Three response shapes have
+been seen from `GetPaymentDetails`, and only one of them returns. Every lookup
+made with valid credentials against a payment that had actually been paid
+answered HTTP 200 with `ResponseCode` `"00"` and a fully populated body. Every
+other observation is a failure, and so throws, in one of two shapes: HTTP 500
+with the ASP.NET envelope `{"Message":"An error has occurred."}`, which surfaces
+as `GatewayFaultException`, or HTTP 200 carrying `ResponseCode` `"550"`, which
+surfaces as `ApiException`. What separates those two failure shapes from each
+other has never been explained
+(see [Unverified behaviour](#unverified-behaviour)).
+
+`"550"` in particular tells you less than it looks like it does, and that is
+worth knowing before you debug one. As recorded in CONVENTIONS.md §4.25, it has
+arrived for an order that was registered and never attempted, asked about with
+**correct** credentials; and it has arrived for a payment that had completed,
+asked about with a **wrong password** (case L5.3). Neither of those is the
+meaning of the code — it is overloaded, exactly as `"07"` is (§4.17). Nor does
+the message narrow it down, because there is none: this endpoint sends no
+`ResponseMessage` at all, so the exception reads `… failed with response code
+550: (no message)`, and the only diagnostic text on the body is
+`Description "System Error"`, which a failure code leaves no response object to
+read off. Suspect the credentials you sent as readily as the order you asked
+about.
+
+So expect the unhappy path to **throw** rather than to hand you a body to
+inspect, and catch both — a thrown `GatewayFaultException` means the gateway
+would not answer, which is evidence neither that the payment happened nor that
+it did not, and on this endpoint it is not evidence about your credentials
+either: a wrong password against an order that produces the fault produces the
+fault, not a `"550"` (CONVENTIONS.md §4.26).
 
 ```php
 use DavitVardanyan\AmeriabankVpos\Exception\ApiException;
@@ -555,8 +588,8 @@ the repository. The ones most likely to matter to a merchant:
   not permitted on the sandbox client this package was built against, so
   everything in the previous section follows the API manifest and no observed
   response.
-- **No real decline has ever been seen.** The one payment that completed was
-  approved. What the gateway sends when a card is refused — the code, the
+- **No real decline has ever been seen.** Two payments have completed and both
+  were approved. What the gateway sends when a card is refused — the code, the
   message, the shape of the body — is unobserved, and this package neither
   interprets nor tabulates response codes for exactly that reason.
 - **Only `Currency::AMD` has been accepted.** USD, EUR and RUB are transcribed
@@ -564,9 +597,11 @@ the repository. The ones most likely to matter to a merchant:
   confirmed in both directions — sent as `"051"` and echoed back as `"051"` —
   which widens the evidence for that one member and the set by nothing.
 - **No fractional amount has ever reached the wire.** Every amount in every run
-  was whole, and the completed payment's amounts were sent as JSON integers, so
-  the decimal-string encoding this package emits is still unexercised end to
-  end. `Amount` carries integer minor units with an ISO 4217 exponent of 2,
+  was whole. The decimal-string encoding this package emits is no longer
+  unexercised — `"10.00"`, `"4.00"` and `"3.00"` have each been sent by this
+  package as JSON strings and accepted — but every one of those fractions was
+  `00`, so what the gateway does with a fractional amount is exactly as unknown
+  as before. `Amount` carries integer minor units with an ISO 4217 exponent of 2,
   which is the standards-correct choice rather than an observed one.
 - **Neither production host has ever been reached.** Every observation behind
   this package came from the test environment.
@@ -578,11 +613,13 @@ the repository. The ones most likely to matter to a merchant:
   is untested rather than untestable, and settling it needs one payment opened
   twice. It is left out of the examples above until somebody does that. Read
   **What the sandbox never confirmed** before depending on it.
-- **`verify()`'s own request has never been made against the gateway.**
-  `verify()` looks the payment up by the `PaymentID` the callback supplied,
-  which arrives lowercase; every `GetPaymentDetails` call on record sent the
-  uppercase form that `InitPayment` returned. Whether the gateway accepts the
-  lowercase form is unknown, and it is the only request `verify()` makes.
+- **How far the `TrxnDescription` substitution reaches is unknown.** The
+  behaviour itself is observed and documented under
+  [The payment lifecycle](#the-payment-lifecycle): an Armenian `Description`
+  comes back with its letters replaced. What is unverified is its extent —
+  Russian and every other non-Latin script are untested, `Opaque` has only ever
+  carried ASCII, and the cause is an open question with the bank. Treat any
+  non-ASCII value you send as something to read back, never to compare.
 
 ## API reference
 

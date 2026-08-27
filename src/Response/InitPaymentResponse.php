@@ -36,7 +36,7 @@ use DavitVardanyan\AmeriabankVpos\Support\ResponseHydrator;
 final readonly class InitPaymentResponse
 {
     /**
-     * @param string|null  $paymentId       Wire key `PaymentID` — uppercase ID, as everywhere except GetPaymentIdResponse. An uppercase GUID of 36 characters (CONVENTIONS.md §4.12), and uppercase here specifically: the BackURL callback echoes the same identifier in lowercase (probe cases P1 and P2). Never compare the two case-sensitively.
+     * @param string|null  $paymentId       Wire key `PaymentID` — uppercase ID, as everywhere except GetPaymentIdResponse. An uppercase GUID of 36 characters (CONVENTIONS.md §4.12), and uppercase here specifically: two other channels deliver the same identifier in lowercase — the BackURL callback (P2, L2) and GetPaymentId (L6.1). Never compare an identifier from one channel against one from another case-sensitively.
      * @param ResponseCode $responseCode    Wire key `ResponseCode`. Integer on this endpoint; 1 is success, as observed on probe case P1.
      * @param string       $responseMessage Wire key `ResponseMessage`. The gateway's own diagnostic text — "OK" on success here (P1), where RefundPayment says "Success" (P4.1). The success word varies by endpoint; nothing may be matched on it.
      */

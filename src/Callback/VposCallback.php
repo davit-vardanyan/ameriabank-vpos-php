@@ -58,9 +58,16 @@ use function trim;
  * rather than quietly reporting every payment as having no identifiers.
  *
  * All five arrived under exactly these spellings on the first *successful*
- * callback this package has ever seen, probe case P2, with `resposneCode`
- * hex-confirmed a second time. That corroborates the pinning; it does not
- * remove the exposure, since one capture cannot promise the next.
+ * callback ever captured, probe case P2, with `resposneCode` hex-confirmed a
+ * second time — and again on L2, where `resposneCode` was hex-confirmed a
+ * third time. L2 is the stronger of the two for this class specifically: P2
+ * was a capture read by hand, whereas L2's query string was handed to
+ * fromQuery(), so it is the pinned literal-key matching below — not a reader —
+ * that met real gateway output and accepted it.
+ *
+ * Two observations corroborate the pinning. Neither promises the next, and the
+ * exposure stays open: a rename would still throw on `paymentID` or `orderID`,
+ * and would still read `null` on the other three.
  *
  * The pinning is on the **keys**. Nothing here pins a value's case, and the
  * `paymentID` constant below records why that distinction is load-bearing.
@@ -85,9 +92,11 @@ final readonly class VposCallback
      * the 36-character uppercase GUID as an observation, not a contract, so a
      * length or pattern test here would reject a value the gateway is entitled
      * to send — and would reject it in the one place where the alternative is
-     * simply to ask the gateway what it means. That restraint was tested by P2
+     * simply to ask the gateway what it means. That restraint has been tested
      * and held: a case check written from the uppercase observation would have
-     * thrown on the first real callback this package ever received.
+     * thrown on L2, whose query string is the first real callback this parsing
+     * path ever met. P2 was read by hand and never reached this class, so it
+     * could not have exercised the restraint; L2 did.
      */
     private const string KEY_PAYMENT_ID = 'paymentID';
 
@@ -106,8 +115,12 @@ final readonly class VposCallback
     /**
      * Wire spelling: `description`. Undocumented, optional, and not only an
      * error channel: it carries `Internal server error` on a failed callback and
-     * `Operation Approved ` on a successful one (probe case P2) — with that
-     * trailing space, which is the gateway's and is passed through untouched.
+     * `Operation Approved ` on a successful one — with that trailing space,
+     * which is the gateway's and is passed through untouched. Both successful
+     * callbacks on record delivered it: L2's value arrived byte-identical to
+     * P2's, trailing space included, on a different payment and a different
+     * order, so the space is not a one-off oddity of a single redirect that a
+     * later call might tidy up. Two observations is still two, but they agree.
      *
      * It is also a third, unrelated field. It is neither the `Description` a
      * merchant sends to InitPayment nor the `Description` that comes back from
@@ -226,8 +239,9 @@ final readonly class VposCallback
      * make this package the only place that spelling is wrong.
      *
      * The values are verbatim, and `description` in particular is worth handling
-     * as text rather than as a token: probe case P2 sent `Operation Approved `
-     * with a trailing space. It is not trimmed here — see the constant's
+     * as text rather than as a token: both successful callbacks on record, P2
+     * and L2, sent `Operation Approved ` with a trailing space, byte-identically
+     * to each other. It is not trimmed here — see the constant's
      * docblock — so a merchant who compares this string instead of logging it
      * will find that even the string they expected does not match.
      *

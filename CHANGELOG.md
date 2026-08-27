@@ -355,6 +355,69 @@ and this project adheres to
 
 ### Changed
 
+- **The package has spoken to Ameriabank.** Every claim in this changelog before
+  this entry was established either by the API surface manifest or by hand-built
+  probe scripts; `src/` itself had only ever talked to a mock HTTP client. A
+  second sandbox payment — cases `L1` to `L7` in CONVENTIONS.md §4.24 — was
+  carried through its whole lifecycle with every request built by a request DTO,
+  serialised and dispatched by `HttpTransport`, and hydrated back into the
+  declared response DTOs. 10 AMD, by card, approved, refunded twice, then a set
+  of deliberate error paths. Nothing in the public surface changed as a result;
+  what changed is that several documented claims about it were wrong.
+- The bytes this package emits for a monetary value have now been accepted by
+  the gateway. `Amount` reached the wire as a quoted decimal string — `"10.00"`
+  on registration, `"4.00"` and `"3.00"` on refunds — where every earlier
+  observation had sent a JSON integer, and `OrderID` went beside it as a bare
+  integer. The gateway accepted the mixed encoding as it stands. **This settles
+  how an amount is encoded and says nothing about precision:** every fraction
+  sent was `.00`, and no fractional amount has ever reached the gateway in
+  either direction.
+- `Vpos::verify()` has made its own request. It sends the `PaymentID` the
+  callback carried, which arrives lowercase where registration issues it
+  uppercase, and no lookup had ever sent that form. The gateway returned the
+  correct payment's fully populated body, so the lowercase form is accepted and
+  the exposure CONVENTIONS.md §13 used to carry is gone. Read that as the
+  observation and not as case folding — only the two forms the gateway itself
+  issues have ever been sent, never a mixed-case one.
+- `paymentIdForOrder()` (`GetPaymentId`) has been called for the first time. It
+  returns the identifier **lowercase**, siding with the callback against
+  registration, which makes a third channel for a case split previously recorded
+  as two; and its success `ResponseMessage` is the **empty string**, where
+  registration answers `"OK"` and a refund answers `"Success"`. Three endpoints,
+  three answers — an empty `ResponseMessage` must not be read as a failure.
+- Documentation no longer claims that Armenian `Description` values round-trip.
+  They do not: Armenian text sent in `Description` returns from
+  `TrxnDescription` with each non-Latin codepoint replaced by U+00BF, the
+  codepoint count and the ASCII prefix preserved. `JSON_UNESCAPED_UNICODE`
+  stays, and stays load-bearing — the outgoing body carried raw UTF-8 Armenian
+  with no `\u` sequence anywhere and was accepted — but the reason given for it
+  was false. Only Armenian has been tested, only through
+  `Description` → `TrxnDescription`, only on the test environment. **Never use a
+  non-ASCII `Description` as a reconciliation key.** See CONVENTIONS.md §4.15
+  and §13.
+- `isAuthenticationFailure()` now documents a gap it always had. It fires on
+  integer `20` only, and string `"20"` is overloaded: six observations carry an
+  entitlement refusal from the binding endpoints, and one carries a credential
+  rejection from `GetPaymentId`. **`AuthenticationException` is therefore
+  unreachable outside registration** — every other endpoint degrades a rejected
+  credential to a plain `ApiException`, which still carries the gateway's own
+  message. The behaviour is deliberately unchanged: the operation correlates
+  with the two meanings without explaining them, and because the sandbox client
+  has no binding entitlement, a wrong password has never reached a binding
+  endpoint, so the deciding case is structurally unobservable for now. Adding a
+  classification later is not a breaking change; removing a wrong one is.
+- Latency is no longer described as "a rejected write answers at read speed".
+  That ordering held on one run and inverted on the next — refusals at 66 and
+  69 ms against reads at 13 to 47 ms, where the same endpoint had measured 145
+  to 216 ms minutes earlier. What survives is the shape and its consequence: the
+  slowest operations are the ones that must never be retried, so a timeout short
+  enough to cut one off buys an `IndeterminateStateException` and a
+  reconciliation.
+- Evidence for the accepted currency is stated as a sweep rather than a count.
+  Every request this project has ever sent that carried a currency carried
+  `"051"`, save exactly one. A count was correct on the day it was written and
+  read as the whole record the moment another run added requests to it.
+
 - `ValidationException::amountNotPositive()`'s parameter is renamed
   `$minorUnits` → `$minorUnitCount`, to keep it distinct from
   `Currency::exponent()`. "Minor units" previously named both a count and an
@@ -467,7 +530,12 @@ and this project adheres to
   merchant sent under `TrxnDescription` instead. A consumer setting `Description`
   and reading it back got the processor's words, not their own. No code changes;
   `TrxnDescription` was already hydrated and is now documented as the field to
-  read.
+  read. That echo is not byte-exact, which this entry did not say and could not
+  have: an Armenian `Description` was later observed coming back from
+  `TrxnDescription` with every Armenian codepoint replaced by U+00BF, the
+  codepoint count and ASCII prefix preserved. Armenian only, `Description` →
+  `TrxnDescription` only, test environment. A non-ASCII `Description` is
+  therefore not a reconciliation key (CONVENTIONS.md §4.15, §13).
 
 ### Security
 
